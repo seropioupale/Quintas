@@ -147,6 +147,28 @@ body[data-view="play"] .study{display:none}
 .ver{text-align:center;color:var(--muted);font-size:12px;margin:0}
 body[data-view="play"] .ver{display:none}
 
+.wedge path{fill:var(--c)}
+svg.map .wedge path{fill:var(--m)}
+svg.map .wedge .dot{display:none}
+.maprow{display:flex;justify-content:center}
+body[data-view="play"] .maprow{display:none}
+.legend{flex-wrap:wrap;gap:6px 14px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.keys.wide{grid-template-columns:repeat(2,1fr)}
+.keys.wide button{font-size:15px;min-height:64px;padding:6px 8px;text-align:center}
+.keys.three{grid-template-columns:repeat(3,1fr)}
+.keys.three button{font-size:15px;min-height:64px}
+.hear{color:var(--paper)}
+textarea#bkArea{width:100%;min-height:74px;background:var(--ink);color:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px;font:13px/1.4 ui-monospace,Menlo,monospace;resize:vertical;word-break:break-all}
+body[data-view="help"] #help{display:flex}
+body[data-view="help"] .left{display:none}
+#help h2{font-family:var(--f-display);font-weight:800;font-size:18px;margin:6px 0 0}
+#help p,#help li{font-size:15px;color:var(--paper);margin:0}
+#help ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+#help b{color:var(--brass);font-weight:600}
+#help .card{gap:10px}
+#help small{color:var(--muted);font-size:12.5px}
+
 /* Paneles */
 section.view{display:none;flex-direction:column;gap:14px}
 body[data-view="setup"] #setup,
@@ -231,6 +253,7 @@ body[data-view="play"] .legend{display:none}
     <h1>Círculo de <em>quintas</em></h1>
     <div class="top-r">
       <div class="best">Récord <b id="bestScore">0</b></div>
+      <button class="ghost fs" id="btnHelp" type="button">Ayuda</button>
       <button class="ghost fs" id="btnFs" type="button" hidden>Pantalla completa</button>
     </div>
   </header>
@@ -255,7 +278,19 @@ body[data-view="play"] .legend{display:none}
         <text id="hubSmall" y="22">horario</text>
       </svg>
     </div>
-    <div class="legend" id="legend"><i></i> Tonalidades que la app te va a repetir más</div>
+    <div class="maprow">
+      <div class="seg">
+        <button type="button" id="mapOff" aria-pressed="true">Colores</button>
+        <button type="button" id="mapOn" aria-pressed="false">Tu dominio</button>
+      </div>
+    </div>
+    <div class="legend" id="legendDots"><span><i></i> Tonalidades que la app te va a repetir más</span></div>
+    <div class="legend" id="legendMap" style="display:none">
+      <span><i style="background:#5fd39a"></i> Dominada</span>
+      <span><i style="background:#f2c14e"></i> En progreso</span>
+      <span><i style="background:#ff6b6b"></i> A reforzar</span>
+      <span><i style="background:#6b6585"></i> Sin datos</span>
+    </div>
     <div class="feedback" id="feedback" aria-live="polite">
       <div class="main" id="fbMain">¿Qué tonalidad es?</div>
       <div class="sub" id="fbSub"></div>
@@ -295,6 +330,9 @@ body[data-view="play"] .legend{display:none}
             <button type="button" data-val="rel">Relativa</button>
             <button type="button" data-val="nb">Vecinas</button>
             <button type="button" data-val="inv">Tocar en el círculo</button>
+            <button type="button" data-val="deg">Grados</button>
+            <button type="button" data-val="prog">Progresiones</button>
+            <button type="button" data-val="ear">Oído</button>
           </div>
         </div>
         <div class="field">
@@ -321,7 +359,7 @@ body[data-view="play"] .legend{display:none}
           <span class="switch"><input type="checkbox" id="retryToggle" checked><i></i></span>
         </div>
         <div class="field">
-          <label for="soundToggle">Sonido<small>Suena el acorde de la tonalidad correcta.</small></label>
+          <label for="soundToggle">Sonido de piano<small>Suena el acorde correcto. Las preguntas de oído lo necesitan.</small></label>
           <span class="switch"><input type="checkbox" id="soundToggle" checked><i></i></span>
         </div>
       </div>
@@ -341,12 +379,69 @@ body[data-view="play"] .legend{display:none}
         <p class="hint" id="weakHint"></p>
         <button class="ghost" id="btnReset" type="button">Borrar memoria</button>
       </div>
+      <div class="card">
+        <h2>Copia de seguridad</h2>
+        <p class="hint">Crea un código con tu progreso, récord y ajustes. Pégalo aquí en otro dispositivo para restaurarlo.</p>
+        <label for="bkArea" class="hint">Código</label>
+        <textarea id="bkArea" spellcheck="false" autocomplete="off" placeholder="CQ1:…"></textarea>
+        <div class="row-btns">
+          <button class="ghost" id="btnExport" type="button">Crear código</button>
+          <button class="ghost" id="btnImport" type="button">Restaurar</button>
+        </div>
+        <p class="hint" id="bkMsg" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- AYUDA -->
+    <section class="view" id="help">
+      <button class="ghost" id="btnHelpBack" type="button" style="color:var(--paper)">Volver</button>
+      <div class="card">
+        <h2>Cómo se juega</h2>
+        <p>Elige los ajustes, pulsa «Empezar ronda» y responde antes de que se agote el contador del centro. Tras cada respuesta verás la solución y oirás su acorde al piano.</p>
+        <p>El anillo exterior son las tonalidades mayores y el interior sus relativas menores. En sentido horario subes por quintas y sumas un sostenido; al revés, sumas un bemol.</p>
+      </div>
+      <div class="card">
+        <h2>Tipos de pregunta</h2>
+        <ul>
+          <li><b>Posición.</b> Se ilumina un sector con «?». Di qué tonalidad es.</li>
+          <li><b>Armadura.</b> Ves «3♯» y dices qué tonalidad la lleva.</li>
+          <li><b>Relativa.</b> Di la relativa de la tonalidad iluminada.</li>
+          <li><b>Vecinas.</b> Di cuál está una quinta arriba o abajo.</li>
+          <li><b>Tocar en el círculo.</b> La app nombra la tonalidad y tú tocas su sector.</li>
+          <li><b>Grados.</b> «¿Cuál es el IV de A mayor?». Mayúsculas son acordes mayores, minúsculas menores y ° disminuido.</li>
+          <li><b>Progresiones.</b> Elige los acordes de un ii–V–I, I–IV–V y otras en la tonalidad indicada.</li>
+          <li><b>Oído.</b> Suenan dos tonalidades seguidas. Di si la segunda está una quinta arriba, una quinta abajo o es la relativa.</li>
+        </ul>
+        <small>Grados y progresiones no preguntan por F♯/G♭ ni D♯m/E♭m, porque sus acordes se escriben de dos maneras.</small>
+      </div>
+      <div class="card">
+        <h2>Tiempo y puntos</h2>
+        <ul>
+          <li>Con «Acelerar al acertar», cada acierto recorta el límite un 6 % y cada fallo lo relaja un 12 %.</li>
+          <li>Cada acierto vale 100 puntos, hasta 100 más por rapidez y 10 por cada acierto seguido (máximo 100).</li>
+          <li>Con «Reintento inmediato», lo que fallas vuelve dos o tres preguntas después.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Memoria y dominio</h2>
+        <ul>
+          <li>Las tonalidades que fallas o respondes lento salen más veces hasta que las aciertes rápido.</li>
+          <li>«Tu dominio», bajo el círculo, lo colorea según cómo llevas cada tonalidad: verde dominada, ámbar en progreso, rojo a reforzar, gris sin datos.</li>
+          <li>Fuera de la ronda, toca un sector para estudiarlo: armadura, relativa, vecinas, acordes y tu registro.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Tus datos</h2>
+        <p>Todo se guarda en este dispositivo. Usa «Copia de seguridad» para llevar tu progreso a otro: crea el código aquí y restáuralo allí.</p>
+        <small>Piano: muestras Salamander Grand Piano (Yamaha C5) de Alexander Holm, licencia CC BY 3.0.</small>
+      </div>
     </section>
 
     <!-- JUEGO -->
     <section class="view" id="play">
       <div class="keys" id="keys"></div>
       <div class="taphint" id="tapHint" style="display:none">Toca el sector correcto en el círculo</div>
+      <button class="ghost hear" id="btnHear" type="button" style="display:none">Volver a escuchar</button>
       <button class="ghost" id="btnQuit" type="button">Salir de la ronda</button>
     </section>
 
@@ -374,7 +469,7 @@ body[data-view="play"] .legend{display:none}
       </div>
       <button class="cta" id="btnAgain">Otra ronda</button>
     </section>
-    <p class="ver">Versión 1.3.1</p>
+    <p class="ver">Versión 1.4</p>
   </div>
 </main>
 
@@ -386,7 +481,14 @@ var MAJ=['C','G','D','A','E','B','F♯/G♭','D♭','A♭','E♭','B♭','F'];
 var MIN=['Am','Em','Bm','F♯m','C♯m','G♯m','D♯m/E♭m','B♭m','Fm','Cm','Gm','Dm'];
 var SOLF={C:'Do',D:'Re',E:'Mi',F:'Fa',G:'Sol',A:'La',B:'Si'};
 var SHARPS=['F','C','G','D','A','E','B'], FLATS=['B','E','A','D','G','C','F'];
-var KINDS=['pos','sig','rel','nb','inv'];
+var SHN=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+var FLN=['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
+var SCALE={M:[0,2,4,5,7,9,11],m:[0,2,3,5,7,8,10]};
+var QUAL={M:['','m','m','','','m','°'],m:['m','°','','m','m','','']};
+var NUM={M:['I','ii','iii','IV','V','vi','vii°'],m:['i','ii°','III','iv','v','VI','VII']};
+var PROGS={M:[[1,4,0],[0,3,4],[0,4,5,3],[5,3,0,4]],m:[[0,3,4],[0,5,2,6],[1,4,0]]};
+var KINDS=['pos','sig','rel','nb','inv','deg','prog','ear'];
+var EAR={up:'Quinta arriba',down:'Quinta abajo',rel:'Relativa'};
 var SVGNS='http://www.w3.org/2000/svg';
 var TAU=326.73;
 
@@ -394,14 +496,19 @@ function $(id){return document.getElementById(id)}
 function load(k,def){try{var v=localStorage.getItem(k);return v?JSON.parse(v):def}catch(e){return def}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function fmt(n){return n.toFixed(1).replace('.',',')}
+function rnd(n){return Math.floor(Math.random()*n)}
 
-var settings=Object.assign({notation:'us',mode:'maj',count:15,time:8,prog:true,sound:true,retry:true,kinds:KINDS.slice()},load('cq.settings.v1',{}));
-if(!Array.isArray(settings.kinds)||!settings.kinds.length) settings.kinds=KINDS.slice();
-settings.kinds=settings.kinds.filter(function(k){return KINDS.indexOf(k)>-1});
-if(!settings.kinds.length) settings.kinds=['pos'];
-var stats=load('cq.stats.v1',{});
-var days=load('cq.days.v1',{});
-var best=load('cq.best.v1',0);
+var DEFAULTS={notation:'us',mode:'maj',count:15,time:8,prog:true,sound:true,retry:true,kinds:KINDS.slice(),v:14};
+var settings, stats, days, best;
+function loadAll(){
+  settings=Object.assign({},DEFAULTS,load('cq.settings.v1',{}));
+  if(!Array.isArray(settings.kinds)) settings.kinds=KINDS.slice();
+  if(!(load('cq.settings.v1',{}).v>=14)){ ['deg','prog','ear'].forEach(function(k){if(settings.kinds.indexOf(k)<0)settings.kinds.push(k)}); settings.v=14; }
+  settings.kinds=settings.kinds.filter(function(k){return KINDS.indexOf(k)>-1});
+  if(!settings.kinds.length) settings.kinds=['pos'];
+  stats=load('cq.stats.v1',{}); days=load('cq.days.v1',{}); best=load('cq.best.v1',0);
+}
+loadAll();
 
 function tr(s){return settings.notation==='eu'?s.replace(/[A-G]/g,function(l){return SOLF[l]}):s}
 function label(type,pos){return tr(type==='M'?MAJ[pos]:MIN[pos])}
@@ -425,11 +532,25 @@ function sigText(pos){
   var list=(sharp?SHARPS:FLATS).slice(0,n).map(function(x){return tr(x)+(sharp?'♯':'♭')}).join(' ');
   return 'Armadura: '+n+(sharp?'♯':'♭')+' · '+list;
 }
+/* Acordes diatónicos (no se usan en la posición 6, que es enarmónica) */
+function noteName(pos,pc){return tr((pos>=1&&pos<=5?SHN:FLN)[pc])}
+function degPc(type,pos,d){return (pitch(type,pos)+SCALE[type][d])%12}
+function degChord(type,pos,d){return noteName(pos,degPc(type,pos,d))+QUAL[type][d]}
+function progText(type,pos,degs){return degs.map(function(d){return degChord(type,pos,d)}).join(' – ')}
+function progNum(type,degs){return degs.map(function(d){return NUM[type][d]}).join('–')}
 function color(type,pos){
   var h=(pos*30+20)%360;
   return type==='M'?'oklch(0.78 0.14 '+h+')':'oklch(0.64 0.12 '+h+')';
 }
 function st(id){ if(!stats[id]) stats[id]={n:0,ok:0,score:0}; return stats[id]; }
+function mastery(id){
+  var s=stats[id];
+  if(!s||!s.n) return 'none';
+  if(s.score>=2) return 'bad';
+  if(s.n<3||s.ok/s.n<0.8) return 'mid';
+  return 'good';
+}
+var MCOL={none:'#6b6585',bad:'#ff6b6b',mid:'#f2c14e',good:'#5fd39a'};
 
 /* ---------- Días ---------- */
 function dayKey(d){
@@ -439,7 +560,7 @@ function dayKey(d){
 function dayAgo(n){var d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-n);return d}
 function today(){var k=dayKey(new Date()); if(!days[k]) days[k]={q:0,ok:0,sumT:0,rounds:0}; return days[k];}
 function dayStreak(){
-  var n=0, i=(days[dayKey(dayAgo(0))]&&days[dayKey(dayAgo(0))].q>0)?0:1;
+  var n=0, t=days[dayKey(dayAgo(0))], i=(t&&t.q>0)?0:1;
   while(true){var e=days[dayKey(dayAgo(i))]; if(e&&e.q>0){n++;i++}else break;}
   return n;
 }
@@ -483,7 +604,7 @@ function buildWheel(){
       (function(p){
         var mid=p*30-90, g=el('g',{'class':'wedge'}), id=type+p;
         g.style.setProperty('--c',color(type,p));
-        var path=el('path',{d:arc(r1,r2,mid-15,mid+15),fill:color(type,p)});
+        var path=el('path',{d:arc(r1,r2,mid-15,mid+15)});
         var c=pt((r1+r2)/2,mid);
         var text=el('text',{x:c[0],y:c[1]});
         var d=pt(cfg[4],mid);
@@ -514,12 +635,14 @@ function paintLabels(){
       t.textContent=s;
     }
     w.g.classList.toggle('weak',st(id).score>=2);
+    w.g.style.setProperty('--m',MCOL[mastery(id)]);
   });
 }
 
 /* ---------- Ajustes ---------- */
+var mapOn=false;
 function syncSettings(){
-  document.querySelectorAll('.seg').forEach(function(seg){
+  document.querySelectorAll('.seg[data-key]').forEach(function(seg){
     var key=seg.getAttribute('data-key');
     seg.querySelectorAll('button').forEach(function(b){
       b.setAttribute('aria-pressed',String(b.getAttribute('data-val')===settings[key]));
@@ -536,6 +659,13 @@ function syncSettings(){
   $('retryToggle').checked=settings.retry;
   $('bestScore').textContent=best.toLocaleString('es-ES');
   save('cq.settings.v1',settings);
+}
+function paintMap(){
+  svg.classList.toggle('map',mapOn);
+  $('mapOff').setAttribute('aria-pressed',String(!mapOn));
+  $('mapOn').setAttribute('aria-pressed',String(mapOn));
+  $('legendDots').style.display=mapOn?'none':'';
+  $('legendMap').style.display=mapOn?'':'none';
 }
 function weakList(){
   return Object.keys(wedges).filter(function(id){return st(id).score>=2})
@@ -560,31 +690,59 @@ function paintWeak(boxId,hintId){
     : (played?'Ninguna tonalidad pendiente. Baja el tiempo máximo para subir el listón.'
              :'Todavía no hay datos. Juega una ronda y la app recordará las que más te cuestan.');
 }
-function refreshAll(){ syncSettings(); paintLabels(); paintWeak('weakChips','weakHint'); paintProgress(); paintStudy(); }
+function refreshAll(){ syncSettings(); paintLabels(); paintMap(); paintWeak('weakChips','weakHint'); paintProgress(); paintStudy(); }
 
-/* ---------- Sonido ---------- */
-var actx=null;
+/* ---------- Piano ---------- */
+var actx=null, master=null, samples={}, loading=false;
+var SAMPLE_NOTES=[['C2',36],['Ds2',39],['Fs2',42],['A2',45],['C3',48],['Ds3',51],['Fs3',54],['A3',57],['C4',60],['Ds4',63],['Fs4',66],['A4',69],['C5',72]];
 function initAudio(){
   if(!settings.sound) return;
   try{
-    if(!actx){var AC=window.AudioContext||window.webkitAudioContext; if(AC) actx=new AC();}
-    if(actx&&actx.state==='suspended') actx.resume();
+    if(!actx){
+      var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      actx=new AC(); master=actx.createGain(); master.gain.value=0.9; master.connect(actx.destination);
+    }
+    if(actx.state==='suspended') actx.resume();
+    if(!loading){ loading=true; SAMPLE_NOTES.forEach(loadSample); }
   }catch(e){actx=null}
 }
-function chord(type,pos){
-  if(!settings.sound||!actx) return;
+function loadSample(n){
   try{
-    var root=48+pitch(type,pos), now=actx.currentTime;
-    [0,type==='M'?4:3,7,12].forEach(function(iv,i){
-      var o=actx.createOscillator(), g=actx.createGain();
-      o.type='triangle'; o.frequency.value=440*Math.pow(2,(root+iv-69)/12);
-      g.gain.setValueAtTime(0,now);
-      g.gain.linearRampToValueAtTime(0.13,now+0.02+i*0.03);
-      g.gain.exponentialRampToValueAtTime(0.001,now+0.9);
-      o.connect(g);g.connect(actx.destination);o.start(now);o.stop(now+0.95);
-    });
+    fetch('piano/'+n[0]+'.mp3').then(function(r){ if(!r.ok) throw 0; return r.arrayBuffer(); })
+    .then(function(buf){ actx.decodeAudioData(buf,function(b){samples[n[1]]=b},function(){}); })
+    .catch(function(){});
   }catch(e){}
 }
+function note(midi,when,vel){
+  var bestM=null;
+  for(var k in samples){ if(bestM===null||Math.abs(k-midi)<Math.abs(bestM-midi)) bestM=+k; }
+  var g=actx.createGain(); g.connect(master);
+  if(bestM!==null&&Math.abs(bestM-midi)<=2){
+    var src=actx.createBufferSource(); src.buffer=samples[bestM];
+    src.playbackRate.value=Math.pow(2,(midi-bestM)/12);
+    g.gain.setValueAtTime(vel,when);
+    g.gain.setValueAtTime(vel,when+1.6);
+    g.gain.exponentialRampToValueAtTime(0.001,when+2.6);
+    src.connect(g); src.start(when); src.stop(when+2.7);
+  }else{
+    var o=actx.createOscillator(); o.type='triangle'; o.frequency.value=440*Math.pow(2,(midi-69)/12);
+    g.gain.setValueAtTime(0,when);
+    g.gain.linearRampToValueAtTime(0.16*vel,when+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001,when+1.1);
+    o.connect(g); o.start(when); o.stop(when+1.15);
+  }
+}
+/* Acorde de piano: bajo + tríada + octava, con un rasgueo muy leve */
+function playChord(pc,qual,delay){
+  if(!settings.sound||!actx) return;
+  try{
+    var root=48+pc, when=actx.currentTime+(delay||0)+0.02;
+    var third=qual===''?4:3, fifth=qual==='°'?6:7;
+    [[-12,0.75],[0,0.7],[third,0.6],[fifth,0.6],[12,0.55]].forEach(function(x,i){ note(root+x[0],when+i*0.012,x[1]); });
+  }catch(e){}
+}
+function keyChord(type,pos,delay){ playChord(pitch(type,pos),type==='M'?'':'m',delay); }
+function playSeq(list){ list.forEach(function(c,i){ playChord(c[0],c[1],i*0.7); }); }
 
 /* ---------- Modo estudio ---------- */
 var sel=null;
@@ -598,10 +756,10 @@ function paintStudy(){
   if(!sel||!wedges[sel]){
     title.textContent='Modo estudio';
     var p=document.createElement('p'); p.className='hint';
-    p.textContent='Toca cualquier sector del círculo para oír su acorde y ver armadura, relativa y vecinas.';
+    p.textContent='Toca cualquier sector del círculo para oír su acorde y ver armadura, relativa, vecinas y acordes.';
     box.appendChild(p); return;
   }
-  var w=wedges[sel];
+  var w=wedges[sel], s=stats[sel];
   title.textContent=fullName(w.type,w.pos);
   var rows=[
     ['Armadura',sigText(w.pos).replace('Armadura: ','')],
@@ -609,6 +767,8 @@ function paintStudy(){
     ['Quinta arriba (dominante)',flat(label(w.type,(w.pos+1)%12))],
     ['Quinta abajo (subdominante)',flat(label(w.type,(w.pos+11)%12))]
   ];
+  if(w.pos!==6) rows.push(['Acordes de la tonalidad',[0,1,2,3,4,5,6].map(function(d){return degChord(w.type,w.pos,d)}).join('  ')]);
+  rows.push(['Tu registro',s&&s.n?(s.ok+'/'+s.n+' aciertos'+(s.t?' · '+fmt(s.t/1000)+' s de media':'')):'Sin datos todavía']);
   var dl=document.createElement('dl');
   rows.forEach(function(r){
     var dt=document.createElement('dt'), dd=document.createElement('dd');
@@ -625,22 +785,23 @@ function study(id){
   [other(w.type)+w.pos, w.type+((w.pos+1)%12), w.type+((w.pos+11)%12)].forEach(function(k){wedges[k].g.classList.add('kin')});
   w.g.parentNode.appendChild(w.g);
   paintStudy();
-  initAudio(); chord(w.type,w.pos);
+  initAudio(); keyChord(w.type,w.pos);
 }
 function wedgeTap(id){
-  if(document.body.getAttribute('data-view')==='play'){
+  var v=document.body.getAttribute('data-view');
+  if(v==='play'){
     if(G&&!G.locked&&G.q.kind==='inv') resolve(id);
-  }else study(id);
+  }else if(v!=='help') study(id);
 }
 
 /* ---------- Juego ---------- */
-var G=null, raf=0, nextTimer=0;
+var G=null, raf=0, nextTimer=0, lastView='setup';
 var svg=$('wheel'), prog=$('prog'), qmark=$('qmark');
 
 function setView(v){
   document.body.setAttribute('data-view',v);
   svg.classList.toggle('quiz',v==='play');
-  if(v!=='play') svg.classList.remove('tap');
+  if(v==='play') svg.classList.remove('map'); else { svg.classList.remove('tap'); svg.classList.toggle('map',mapOn); }
 }
 function clearWedges(){
   Object.keys(wedges).forEach(function(id){wedges[id].g.classList.remove('active','pulse','reveal','good','miss','cue')});
@@ -655,35 +816,69 @@ function pool(){
   types.forEach(function(t){for(var p=0;p<12;p++)out.push(t+p)});
   return out;
 }
-function pickId(){
-  var items=pool().filter(function(id){return id!==G.lastId});
+function pickId(skip6){
+  var items=pool().filter(function(id){return id!==G.lastId&&!(skip6&&wedges[id].pos===6)});
   var total=0, ws=items.map(function(id){var w=1+1.7*st(id).score; total+=w; return w});
   var r=Math.random()*total;
   for(var i=0;i<items.length;i++){ r-=ws[i]; if(r<=0) return items[i]; }
   return items[items.length-1];
 }
 function newQuestion(){
-  var kind=settings.kinds[Math.floor(Math.random()*settings.kinds.length)];
-  var id=pickId(), w=wedges[id];
-  return {kind:kind,id:id,type:w.type,pos:w.pos,dir:Math.random()<0.5?1:-1};
+  var kinds=settings.kinds.filter(function(k){return k!=='ear'||settings.sound});
+  if(!kinds.length) kinds=['pos'];
+  var kind=kinds[rnd(kinds.length)];
+  var chordal=kind==='deg'||kind==='prog';
+  var id=pickId(chordal), w=wedges[id];
+  var q={kind:kind,id:id,type:w.type,pos:w.pos,answer:id};
+  if(kind==='nb'){ q.dir=Math.random()<0.5?1:-1; }
+  else if(kind==='deg'){
+    q.deg=1+rnd(6);
+    q.answer='pc'+degPc(q.type,q.pos,q.deg);
+  }else if(kind==='prog'){
+    var list=PROGS[q.type]; q.degs=list[rnd(list.length)];
+    var cand=[1,2,3,10,11,9].map(function(o){return (q.pos+o)%12}).filter(function(p){return p!==6});
+    for(var i=cand.length-1;i>0;i--){var j=rnd(i+1),t=cand[i];cand[i]=cand[j];cand[j]=t;}
+    q.opts=[q.pos].concat(cand.slice(0,3));
+    for(i=q.opts.length-1;i>0;i--){j=rnd(i+1);t=q.opts[i];q.opts[i]=q.opts[j];q.opts[j]=t;}
+    q.answer='p'+q.pos;
+  }else if(kind==='ear'){
+    q.move=['up','down','rel'][rnd(3)];
+    q.fromType=q.move==='rel'?other(q.type):q.type;
+    q.fromPos=q.move==='up'?(q.pos+11)%12:q.move==='down'?(q.pos+1)%12:q.pos;
+    q.answer=q.move;
+  }
+  return q;
 }
+function addKey(box,ans,text,aria){
+  var b=document.createElement('button'); b.type='button'; b.setAttribute('data-ans',ans);
+  if(text.indexOf('/')>-1){
+    text.split('/').forEach(function(part){var sp=document.createElement('span');sp.className='two';sp.textContent=part;b.appendChild(sp)});
+  }else b.textContent=text;
+  if(aria) b.setAttribute('aria-label',aria);
+  b.addEventListener('click',function(){resolve(ans)});
+  box.appendChild(b); return b;
+}
+function playEar(q){ initAudio(); keyChord(q.fromType,q.fromPos,0); keyChord(q.type,q.pos,0.9); }
 function buildKeys(q){
-  var box=$('keys'), hint=$('tapHint'); box.innerHTML=''; box.classList.remove('locked');
+  var box=$('keys'), hint=$('tapHint'), again=$('btnHear');
+  box.innerHTML=''; box.className='keys';
   var tap=q.kind==='inv';
   box.style.display=tap?'none':''; hint.style.display=tap?'':'none';
+  again.style.display=q.kind==='ear'?'':'none';
   if(tap) return;
-  var type=q.type;
-  var order=[0,1,2,3,4,5,6,7,8,9,10,11].sort(function(a,b){return pitch(type,a)-pitch(type,b)});
-  order.forEach(function(p){
-    var b=document.createElement('button'); b.type='button'; b.setAttribute('data-pos',p);
-    var s=label(type,p);
-    if(s.indexOf('/')>-1){
-      s.split('/').forEach(function(part){var sp=document.createElement('span');sp.className='two';sp.textContent=part;b.appendChild(sp)});
-    }else b.textContent=s;
-    b.setAttribute('aria-label',fullName(type,p));
-    b.addEventListener('click',function(){resolve(type+p)});
-    box.appendChild(b);
-  });
+  if(q.kind==='deg'){
+    for(var pc=0;pc<12;pc++) addKey(box,'pc'+pc,noteName(q.pos,pc)+QUAL[q.type][q.deg]);
+  }else if(q.kind==='prog'){
+    box.classList.add('wide');
+    q.opts.forEach(function(p){ addKey(box,'p'+p,progText(q.type,p,q.degs)); });
+  }else if(q.kind==='ear'){
+    box.classList.add('three');
+    ['down','rel','up'].forEach(function(m){ addKey(box,m,EAR[m]); });
+  }else{
+    var type=q.type;
+    var order=[0,1,2,3,4,5,6,7,8,9,10,11].sort(function(a,b){return pitch(type,a)-pitch(type,b)});
+    order.forEach(function(p){ addKey(box,type+p,label(type,p),fullName(type,p)); });
+  }
 }
 function hud(){
   $('hudQ').textContent=Math.min(G.i+1,G.total)+'/'+G.total;
@@ -700,8 +895,8 @@ function startRound(){
   window.scrollTo(0,0);
   ask();
 }
-function cueWedge(id){
-  var c=wedges[id]; c.g.parentNode.appendChild(c.g); c.g.classList.add('cue','pulse');
+function cueWedge(id,pulse){
+  var c=wedges[id]; c.g.parentNode.appendChild(c.g); c.g.classList.add('cue'); if(pulse!==false) c.g.classList.add('pulse');
 }
 function ask(){
   clearWedges();
@@ -713,7 +908,7 @@ function ask(){
   G.q=q; G.lastId=q.id; G.locked=false;
   svg.classList.toggle('tap',q.kind==='inv');
   buildKeys(q);
-  var main='', sub=q.again?'Repaso de un fallo reciente':'';
+  var main='', sub='', lead=0;
   if(q.kind==='pos'){
     w.g.parentNode.appendChild(w.g);
     w.g.classList.add('active','pulse');
@@ -729,20 +924,32 @@ function ask(){
     var from=(q.pos-q.dir+12)%12;
     cueWedge(q.type+from);
     main=(q.dir>0?'¿Quinta arriba (dominante) de ':'¿Quinta abajo (subdominante) de ')+flat(label(q.type,from))+'?';
+  }else if(q.kind==='deg'){
+    cueWedge(q.id);
+    main='¿Cuál es el '+NUM[q.type][q.deg]+' de '+fullName(q.type,q.pos)+'?';
+  }else if(q.kind==='prog'){
+    cueWedge(q.id);
+    main=progNum(q.type,q.degs)+' en '+fullName(q.type,q.pos);
+    sub='Elige los acordes';
+  }else if(q.kind==='ear'){
+    main='Escucha: ¿qué movimiento es?';
+    sub='Suena la tonalidad de partida y luego la de llegada';
+    playEar(q); lead=1500;
   }else{
     main='Toca '+fullName(q.type,q.pos);
   }
+  if(q.again) sub='Repaso de un fallo reciente';
   $('feedback').className='feedback';
   $('fbMain').textContent=main;
   $('fbSub').textContent=sub;
   $('hubSmall').textContent='segundos';
   hud();
-  G.t0=performance.now();
+  G.t0=performance.now()+lead;
   cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
 }
 function tick(){
   if(!G||G.locked) return;
-  var frac=(performance.now()-G.t0)/G.limit;
+  var frac=Math.max(0,(performance.now()-G.t0)/G.limit);
   if(frac>=1){ drawTimer(1); resolve(null); return; }
   drawTimer(frac);
   raf=requestAnimationFrame(tick);
@@ -756,46 +963,69 @@ function resolve(ans){
   if(!G||G.locked) return;
   G.locked=true; cancelAnimationFrame(raf);
   var q=G.q, w=wedges[q.id], s=st(q.id), d=today();
-  var elapsed=Math.min(performance.now()-G.t0,G.limit), frac=elapsed/G.limit;
-  var good=ans===q.id, box=$('keys');
+  var elapsed=Math.min(Math.max(0,performance.now()-G.t0),G.limit), frac=elapsed/G.limit;
+  var good=ans===q.answer, box=$('keys');
   box.classList.add('locked');
   box.querySelectorAll('button').forEach(function(b){
-    var p=+b.getAttribute('data-pos');
-    if(p===q.pos) b.classList.add('good');
-    else if(q.type+p===ans) b.classList.add('miss');
+    var a=b.getAttribute('data-ans');
+    if(a===q.answer) b.classList.add('good');
+    else if(a===ans) b.classList.add('miss');
   });
   qmark.style.display='none';
   Object.keys(wedges).forEach(function(id){wedges[id].g.classList.remove('pulse')});
+  if(q.kind==='ear') cueWedge(q.fromType+q.fromPos,false);
   w.g.parentNode.appendChild(w.g);
   if(q.kind==='inv'&&!good){
     w.g.classList.add('reveal','good');
     if(ans&&wedges[ans]) wedges[ans].g.classList.add('reveal','miss');
   }else w.g.classList.add('reveal',good?'good':'miss');
   s.n++; d.q++;
+  var right, sub;
+  if(q.kind==='deg'){
+    right=degChord(q.type,q.pos,q.deg)+' · '+NUM[q.type][q.deg]+' de '+fullName(q.type,q.pos);
+    sub=[0,1,2,3,4,5,6].map(function(x){return degChord(q.type,q.pos,x)}).join('  ');
+  }else if(q.kind==='prog'){
+    right=progText(q.type,q.pos,q.degs);
+    sub=progNum(q.type,q.degs)+' en '+fullName(q.type,q.pos);
+  }else if(q.kind==='ear'){
+    right=EAR[q.move];
+    sub='De '+fullName(q.fromType,q.fromPos)+' a '+fullName(q.type,q.pos);
+  }else{
+    right=fullName(q.type,q.pos); sub=sigText(q.pos);
+  }
   var fb=$('feedback');
   if(good){
     s.ok++; s.score=Math.max(0,s.score-(frac<0.5?1:0.5));
+    s.t=s.t?Math.round(s.t*0.7+elapsed*0.3):Math.round(elapsed);
     d.ok++; d.sumT+=elapsed;
     G.ok++; G.streak++; G.bestStreak=Math.max(G.bestStreak,G.streak); G.sumT+=elapsed;
     var gain=100+Math.round(100*(1-frac))+10*Math.min(G.streak,10);
     G.pts+=gain;
     if(settings.prog) G.limit=Math.max(G.minLimit,G.limit*0.94);
     fb.className='feedback good';
-    $('fbMain').textContent=fullName(q.type,q.pos)+' · +'+gain;
+    $('fbMain').textContent=right+' · +'+gain;
   }else{
     s.score=Math.min(6,s.score+2);
     G.streak=0; G.misses[q.id]=(G.misses[q.id]||0)+1;
     if(settings.prog) G.limit=Math.min(G.base,G.limit*1.12);
     fb.className='feedback miss';
-    $('fbMain').textContent=(ans===null?'Tiempo. Era ':'Era ')+fullName(q.type,q.pos);
+    $('fbMain').textContent=(ans===null?'Tiempo. Era ':'Era ')+right;
   }
-  $('fbSub').textContent=sigText(q.pos);
+  $('fbSub').textContent=sub;
   G.i++;
   if(!good&&settings.retry){
-    G.queue.push({at:G.i+1+Math.floor(Math.random()*2),q:{kind:q.kind,id:q.id,type:q.type,pos:q.pos,dir:q.dir}});
+    var copy=JSON.parse(JSON.stringify(q)); delete copy.again;
+    G.queue.push({at:G.i+1+rnd(2),q:copy});
   }
   save('cq.stats.v1',stats); save('cq.days.v1',days);
-  chord(q.type,q.pos);
+  var wait=good?850:2100;
+  if(q.kind==='deg'){ playChord(degPc(q.type,q.pos,q.deg),QUAL[q.type][q.deg]); }
+  else if(q.kind==='prog'){
+    playSeq(q.degs.map(function(x){return [degPc(q.type,q.pos,x),QUAL[q.type][x]]}));
+    if(settings.sound&&actx) wait=Math.max(wait,q.degs.length*700+500);
+  }
+  else if(q.kind==='ear'){ if(!good) playEar(q); }
+  else keyChord(q.type,q.pos);
   hud();
   $('hudQ').textContent=G.i+'/'+G.total;
   clearTimeout(nextTimer);
@@ -805,7 +1035,7 @@ function resolve(ans){
       if(G.queue.length&&G.extra<3){ G.total++; G.extra++; ask(); }
       else finish();
     }else ask();
-  }, good?850:2100);
+  }, wait);
 }
 function finish(){
   var g=G; G=null;
@@ -833,9 +1063,25 @@ function quit(){
   clearWedges(); hubIdle(); setView('setup'); refreshAll();
 }
 
+/* ---------- Copia de seguridad ---------- */
+function backupCode(){
+  var json=JSON.stringify({v:1,stats:stats,days:days,best:best,settings:settings});
+  return 'CQ1:'+btoa(unescape(encodeURIComponent(json)));
+}
+function restore(code){
+  code=(code||'').trim();
+  if(code.indexOf('CQ1:')!==0) throw new Error('formato');
+  var o=JSON.parse(decodeURIComponent(escape(atob(code.slice(4)))));
+  if(!o||typeof o.stats!=='object'||typeof o.days!=='object') throw new Error('contenido');
+  save('cq.stats.v1',o.stats); save('cq.days.v1',o.days);
+  save('cq.best.v1',+o.best||0);
+  if(o.settings&&typeof o.settings==='object') save('cq.settings.v1',o.settings);
+  loadAll();
+}
+
 /* ---------- Eventos ---------- */
 function wire(){
-  document.querySelectorAll('.seg').forEach(function(seg){
+  document.querySelectorAll('.seg[data-key]').forEach(function(seg){
     seg.addEventListener('click',function(e){
       var b=e.target.closest('button'); if(!b) return;
       settings[seg.getAttribute('data-key')]=b.getAttribute('data-val'); refreshAll();
@@ -848,21 +1094,37 @@ function wire(){
     else settings.kinds.push(v);
     syncSettings();
   });
+  $('mapOff').addEventListener('click',function(){mapOn=false;paintMap()});
+  $('mapOn').addEventListener('click',function(){mapOn=true;paintLabels();paintMap()});
   $('qMinus').addEventListener('click',function(){settings.count=Math.max(5,settings.count-5);syncSettings()});
   $('qPlus').addEventListener('click',function(){settings.count=Math.min(60,settings.count+5);syncSettings()});
   $('timeRange').addEventListener('input',function(e){settings.time=parseFloat(e.target.value);syncSettings()});
   $('progToggle').addEventListener('change',function(e){settings.prog=e.target.checked;syncSettings()});
-  $('soundToggle').addEventListener('change',function(e){settings.sound=e.target.checked;syncSettings()});
+  $('soundToggle').addEventListener('change',function(e){settings.sound=e.target.checked;syncSettings();initAudio()});
   $('retryToggle').addEventListener('change',function(e){settings.retry=e.target.checked;syncSettings()});
   $('btnStart').addEventListener('click',startRound);
   $('btnAgain').addEventListener('click',startRound);
   $('btnQuit').addEventListener('click',quit);
   $('btnSetup').addEventListener('click',quit);
+  $('btnHear').addEventListener('click',function(){ if(G&&G.q&&G.q.kind==='ear') playEar(G.q); });
+  $('btnHelp').addEventListener('click',function(){ lastView=document.body.getAttribute('data-view'); setView('help'); window.scrollTo(0,0); });
+  $('btnHelpBack').addEventListener('click',function(){ setView(lastView==='results'?'results':'setup'); window.scrollTo(0,0); });
   var armed=0, rb=$('btnReset');
   rb.addEventListener('click',function(){
     if(armed){ clearTimeout(armed); armed=0; stats={}; save('cq.stats.v1',stats); rb.textContent='Borrar memoria'; refreshAll(); return; }
     rb.textContent='Toca otra vez para confirmar';
     armed=setTimeout(function(){armed=0; rb.textContent='Borrar memoria'},3000);
+  });
+  var msg=$('bkMsg'), area=$('bkArea');
+  $('btnExport').addEventListener('click',function(){
+    area.value=backupCode(); area.focus(); area.select();
+    msg.textContent='Código creado. Cópialo y guárdalo en Notas o envíatelo.';
+    try{ navigator.clipboard.writeText(area.value).then(function(){msg.textContent='Código creado y copiado al portapapeles.'}).catch(function(){}); }catch(e){}
+  });
+  $('btnImport').addEventListener('click',function(){
+    if(!area.value.trim()){ msg.textContent='Pega primero el código en el recuadro.'; return; }
+    try{ restore(area.value); area.value=''; refreshAll(); msg.textContent='Progreso restaurado.'; }
+    catch(e){ msg.textContent='Ese código no es válido. Comprueba que lo has pegado entero, empezando por CQ1:'; }
   });
 }
 function wireFullscreen(){

@@ -1,6 +1,6 @@
 ENTRENADOR DEL CÍRCULO DE QUINTAS
 Ayuda e historial de cambios
-Versión actual: 1.3.1 (11 de noviembre de 2026)
+Versión actual: 1.4 (11 de noviembre de 2026)
 Dirección: https://seropioupale.github.io/Quintas/
 
 
@@ -62,6 +62,31 @@ Puedes activar uno o varios en "Tipos de pregunta". Se mezclan al azar.
     Pregunta inversa: la app nombra una tonalidad y tú tocas su
     sector en el círculo. Aquí no hay botonera.
 
+  Grados
+    "¿Cuál es el IV de A mayor?". Eliges el acorde entre los 12
+    posibles. Los números romanos en mayúscula son acordes mayores,
+    en minúscula menores y con ° disminuidos.
+    En mayor: I ii iii IV V vi vii°. En menor natural: i ii° III iv
+    v VI VII.
+
+  Progresiones
+    La app indica una progresión y una tonalidad ("ii–V–I en E♭
+    mayor") y eliges entre cuatro opciones cuáles son sus acordes.
+    Las otras tres son la misma progresión en tonalidades cercanas.
+    En mayor: ii–V–I, I–IV–V, I–V–vi–IV y vi–IV–I–V.
+    En menor: i–iv–v, i–VI–III–VII y ii°–v–i.
+    Al responder suena la progresión completa.
+
+  Oído
+    Suenan dos acordes de tónica seguidos: la tonalidad de partida y
+    la de llegada. Dices si la segunda está una quinta arriba, una
+    quinta abajo o es la relativa. Hay un botón "Volver a escuchar".
+    El tiempo empieza a contar cuando termina el audio. Solo sale si
+    el sonido está activado.
+
+Grados y Progresiones no preguntan por F♯/G♭ mayor ni D♯m/E♭m,
+porque sus acordes se escriben de dos maneras.
+
 
 ==================================================
 4. AJUSTES
@@ -94,8 +119,9 @@ Puedes activar uno o varios en "Tipos de pregunta". Se mezclan al azar.
     después, con el aviso "Repaso de un fallo reciente". Si fallas
     al final de la ronda, esta se alarga hasta 3 preguntas extra.
 
-  Sonido
-    Suena el acorde de la tonalidad correcta al responder.
+  Sonido de piano
+    Suena el acorde correcto al responder, con muestras reales de
+    piano de cola (ver apartado 12).
 
 Los ajustes se guardan solos.
 
@@ -127,6 +153,13 @@ azar. Las pendientes aparecen:
   - Marcadas con un punto blanco en el círculo.
   - Listadas en "Tu memoria de repaso", con su número de fallos.
 
+Mapa de dominio: bajo el círculo, el selector "Colores / Tu dominio"
+pinta cada tonalidad según cómo la llevas:
+  - Verde: dominada (al menos 3 respuestas y 80 % de aciertos).
+  - Ámbar: en progreso.
+  - Rojo: a reforzar.
+  - Gris: sin datos todavía.
+
 "Borrar memoria" pone a cero las dificultades (pide confirmación con
 un segundo toque). No borra el récord ni el progreso por días.
 
@@ -141,6 +174,8 @@ acorde y verás:
   - Su relativa.
   - La tonalidad una quinta arriba (dominante).
   - La tonalidad una quinta abajo (subdominante).
+  - Sus siete acordes diatónicos.
+  - Tu registro: aciertos y tiempo medio en esa tonalidad.
 
 El sector elegido y sus tres relacionadas quedan resaltados. Toca el
 mismo sector otra vez para quitar la selección.
@@ -191,12 +226,47 @@ dispositivo donde juegas. No se comparten entre el móvil y el
 ordenador, ni entre la app instalada y la copia que hay en Claude.
 Se pierden si borras los datos del navegador o desinstalas la app.
 
+Copia de seguridad: en los ajustes, "Crear código" genera un texto
+que empieza por CQ1: con tu progreso, récord y ajustes. Guárdalo en
+Notas o envíatelo. En otro dispositivo, pégalo en el mismo recuadro y
+pulsa "Restaurar". Restaurar sustituye los datos que hubiera.
+
+La ayuda resumida está también dentro de la app, en el botón "Ayuda".
+
 El código está en el repositorio de GitHub seropioupale/Quintas.
 
 
 ==================================================
-11. HISTORIAL DE CAMBIOS
+11. SONIDO DE PIANO
 ==================================================
+
+Los acordes suenan con grabaciones reales de un piano de cola de
+concierto, afinado en temperamento igual (La = 440 Hz). Son las
+muestras "Salamander Grand Piano" de Alexander Holm, grabadas de un
+Yamaha C5 y publicadas con licencia Creative Commons BY 3.0.
+
+No es un Steinway: las grabaciones de Steinway de calidad son
+comerciales y no se pueden incluir en una web pública.
+
+Las muestras se descargan la primera vez que usas la app con
+conexión (algo más de 1 MB) y quedan guardadas para usarla sin
+conexión. Mientras cargan, suena un tono sintético sencillo.
+
+
+==================================================
+12. HISTORIAL DE CAMBIOS
+==================================================
+
+Versión 1.4 · 11/11/2026
+  - Sonido de piano de cola real en todos los acordes.
+  - Nuevo tipo de pregunta: Grados (acordes de cada tonalidad).
+  - Nuevo tipo de pregunta: Progresiones (ii–V–I, I–IV–V y otras).
+  - Nuevo tipo de pregunta: Oído (quinta arriba, abajo o relativa).
+  - Mapa de dominio sobre el círculo.
+  - Copia de seguridad del progreso mediante código.
+  - Ayuda dentro de la app.
+  - El modo estudio muestra los acordes de la tonalidad y tu
+    registro en ella.
 
 Versión 1.3.1 · 11/11/2026
   - Corregido el texto del centro del círculo, que se salía del aro
