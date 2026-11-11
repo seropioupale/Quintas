@@ -1,6 +1,6 @@
 ENTRENADOR DEL CÍRCULO DE QUINTAS
 Ayuda e historial de cambios
-Versión actual: 1.4 (11 de noviembre de 2026)
+Versión actual: 1.5 (11 de noviembre de 2026)
 Dirección: https://seropioupale.github.io/Quintas/
 
 
@@ -182,6 +182,58 @@ mismo sector otra vez para quitar la selección.
 
 
 ==================================================
+ESCALAS Y MODOS (zona de consulta)
+==================================================
+
+Bajo "Empezar ronda" está el botón "Escalas y modos". No es un juego,
+es una chuleta interactiva:
+
+  - Eliges la tónica y todas las escalas se muestran desde esa nota.
+  - Cada escala indica su fórmula de grados, sus notas, el único
+    cambio respecto a su familia (marcado en amarillo), un truco
+    para recordarla, su carácter y dónde se usa.
+  - "Escuchar" toca la escala al piano.
+  - Si la tónica es una tecla negra, la app elige en cada escala la
+    escritura más sencilla (por ejemplo D♭ mayor pero C♯ menor).
+
+Regla en dos pasos:
+  1. Mira la 3ª. Mayor: familia mayor. Menor: familia menor.
+  2. Busca la única nota distinta respecto a la mayor o a la menor
+     natural. Esa nota es el sabor del modo.
+
+Familia mayor (se comparan con la escala mayor):
+  Jónico      la escala mayor, sin cambios
+  Lidio       mayor con ♯4          "Lidio Levanta la 4ª"
+  Mixolidio   mayor con ♭7          "Mixolidio Mustia la 7ª"
+
+Familia menor (se comparan con la menor natural):
+  Eólico      la menor natural, sin cambios
+  Dórico      menor con 6ª mayor    "Dórico Da un 6 mayor"
+  Frigio      menor con ♭2          "Frigio: Frío en el 2"
+  Locrio      menor con ♭2 y ♭5     "Locrio, el Loco: le falla
+                                     hasta la quinta"
+              (es el único con dos cambios; desde el frigio, solo
+              baja la 5ª)
+
+Otras escalas útiles:
+  Menor armónica      menor con 7ª mayor
+  Menor melódica      mayor con ♭3
+  Pentatónica mayor   mayor sin 4ª ni 7ª
+  Pentatónica menor   menor sin 2ª ni 6ª
+  Blues               pentatónica menor más ♭5
+  Frigia dominante    frigio con 3ª mayor (la flamenca)
+
+De más luminoso a más oscuro (cada paso baja una nota y es un paso
+antihorario en el círculo de quintas):
+  Lidio, Jónico, Mixolidio, Dórico, Eólico, Frigio, Locrio
+  Truco: "Luis Jamás Miente: Dice Exactamente Fechas y Lugares"
+
+Modos sobre las teclas blancas (C D E F G A B):
+  Jónico, Dórico, Frigio, Lidio, Mixolidio, Eólico, Locrio
+  Truco: "Juan Dice que Fríen Lubinas y Mejillones En Lugo"
+
+
+==================================================
 8. PROGRESO POR DÍAS
 ==================================================
 
@@ -256,6 +308,11 @@ conexión. Mientras cargan, suena un tono sintético sencillo.
 ==================================================
 12. HISTORIAL DE CAMBIOS
 ==================================================
+
+Versión 1.5 · 11/11/2026
+  - Nueva zona de consulta "Escalas y modos": los siete modos y seis
+    escalas más, con la nota que cambia, trucos para recordarlas,
+    selector de tónica y escucha al piano.
 
 Versión 1.4 · 11/11/2026
   - Sonido de piano de cola real en todos los acordes.

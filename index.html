@@ -169,6 +169,31 @@ body[data-view="help"] .left{display:none}
 #help .card{gap:10px}
 #help small{color:var(--muted);font-size:12.5px}
 
+body[data-view="scales"] #scales{display:flex}
+body[data-view="scales"] .left{display:none}
+.tonics{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.tonics button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--ink);font-family:var(--f-display);font-weight:800;font-size:15px;color:var(--muted);padding:2px}
+.tonics button[aria-pressed="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+#scList{display:flex;flex-direction:column;gap:12px}
+.sc-group{margin-top:8px}
+.sc-group h2{font-family:var(--f-display);font-weight:800;font-size:21px;margin:0}
+.sc{gap:10px}
+.sc-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sc h3{font-family:var(--f-display);font-weight:800;font-size:18px;margin:0;text-wrap:balance}
+.hearsc{color:var(--paper);padding:7px 12px;font-size:13px;flex:none}
+.sc-chg{margin:0;font-size:15px;font-weight:600;color:var(--brass)}
+.sc-row{display:flex;flex-wrap:wrap;gap:5px}
+.sc-row span{min-width:38px;text-align:center;border-radius:8px;padding:5px 6px;font-family:var(--f-display);font-weight:800;font-size:15px;background:var(--panel)}
+.sc-row .dg{background:transparent;border:1px solid var(--line);color:var(--muted);font-size:13px}
+.sc-row .hl{background:var(--brass);border-color:var(--brass);color:#2a1f00}
+.sc dl{display:grid;grid-template-columns:1fr;gap:2px;margin:0}
+.sc dt{color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:6px}
+.sc dd{margin:0;font-size:14.5px}
+.ladder{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px;font-size:15px}
+.ladder b{color:var(--brass);font-weight:600}
+#scales .card p{margin:0;font-size:15px}
+#scales .card p.hint{font-size:13.5px}
+
 /* Paneles */
 section.view{display:none;flex-direction:column;gap:14px}
 body[data-view="setup"] #setup,
@@ -305,6 +330,7 @@ body[data-view="play"] .legend{display:none}
     <!-- AJUSTES -->
     <section class="view" id="setup">
       <button class="cta" id="btnStart">Empezar ronda</button>
+      <button class="ghost" id="btnScales" type="button" style="color:var(--paper);font-size:15px;padding:12px 14px">Escalas y modos</button>
       <div class="card">
         <h2>Ajustes de la ronda</h2>
         <div class="field">
@@ -392,6 +418,41 @@ body[data-view="play"] .legend{display:none}
       </div>
     </section>
 
+    <!-- ESCALAS -->
+    <section class="view" id="scales">
+      <button class="ghost" id="btnScalesBack" type="button" style="color:var(--paper)">Volver</button>
+      <div class="card">
+        <h2>Escalas y modos</h2>
+        <p class="hint">Elige la tónica. Todas las escalas se muestran desde esa nota, con la nota que cambia marcada en amarillo.</p>
+        <div class="tonics" id="tonics"></div>
+      </div>
+      <div class="card">
+        <h2>La regla en dos pasos</h2>
+        <p>1. Mira la 3ª: si es mayor, el modo es de la familia mayor; si es menor, de la familia menor.</p>
+        <p>2. Busca la única nota distinta respecto a la escala mayor o a la menor natural. Esa nota es el sabor del modo.</p>
+      </div>
+      <div class="card">
+        <h2>De más luminoso a más oscuro</h2>
+        <p class="hint">Cada paso baja una sola nota, y equivale a un paso antihorario en el círculo de quintas.</p>
+        <ol class="ladder">
+          <li><b>Lidio</b> · mayor con ♯4</li>
+          <li><b>Jónico</b> · la mayor (baja la 4ª)</li>
+          <li><b>Mixolidio</b> · baja la 7ª</li>
+          <li><b>Dórico</b> · baja la 3ª</li>
+          <li><b>Eólico</b> · la menor natural (baja la 6ª)</li>
+          <li><b>Frigio</b> · baja la 2ª</li>
+          <li><b>Locrio</b> · baja la 5ª</li>
+        </ol>
+        <p><b style="color:var(--brass)">Truco:</b> «<b style="color:var(--brass)">L</b>uis <b style="color:var(--brass)">J</b>amás <b style="color:var(--brass)">M</b>iente: <b style="color:var(--brass)">D</b>ice <b style="color:var(--brass)">E</b>xactamente <b style="color:var(--brass)">F</b>echas y <b style="color:var(--brass)">L</b>ugares».</p>
+      </div>
+      <div class="card">
+        <h2>Los modos sobre las teclas blancas</h2>
+        <p class="hint">Tocando solo teclas blancas, cada nota de partida da un modo: C jónico, D dórico, E frigio, F lidio, G mixolidio, A eólico, B locrio.</p>
+        <p><b style="color:var(--brass)">Truco:</b> «<b style="color:var(--brass)">J</b>uan <b style="color:var(--brass)">D</b>ice que <b style="color:var(--brass)">F</b>ríen <b style="color:var(--brass)">L</b>ubinas y <b style="color:var(--brass)">M</b>ejillones <b style="color:var(--brass)">E</b>n <b style="color:var(--brass)">L</b>ugo».</p>
+      </div>
+      <div id="scList"></div>
+    </section>
+
     <!-- AYUDA -->
     <section class="view" id="help">
       <button class="ghost" id="btnHelpBack" type="button" style="color:var(--paper)">Volver</button>
@@ -428,6 +489,7 @@ body[data-view="play"] .legend{display:none}
           <li>Las tonalidades que fallas o respondes lento salen más veces hasta que las aciertes rápido.</li>
           <li>«Tu dominio», bajo el círculo, lo colorea según cómo llevas cada tonalidad: verde dominada, ámbar en progreso, rojo a reforzar, gris sin datos.</li>
           <li>Fuera de la ronda, toca un sector para estudiarlo: armadura, relativa, vecinas, acordes y tu registro.</li>
+          <li>«Escalas y modos», bajo el botón de empezar, es una zona de consulta: cada modo con la nota que lo distingue, su truco para recordarlo y su sonido.</li>
         </ul>
       </div>
       <div class="card">
@@ -469,7 +531,7 @@ body[data-view="play"] .legend{display:none}
       </div>
       <button class="cta" id="btnAgain">Otra ronda</button>
     </section>
-    <p class="ver">Versión 1.4</p>
+    <p class="ver">Versión 1.5</p>
   </div>
 </main>
 
@@ -498,7 +560,7 @@ function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function fmt(n){return n.toFixed(1).replace('.',',')}
 function rnd(n){return Math.floor(Math.random()*n)}
 
-var DEFAULTS={notation:'us',mode:'maj',count:15,time:8,prog:true,sound:true,retry:true,kinds:KINDS.slice(),v:14};
+var DEFAULTS={tonic:0,notation:'us',mode:'maj',count:15,time:8,prog:true,sound:true,retry:true,kinds:KINDS.slice(),v:14};
 var settings, stats, days, best;
 function loadAll(){
   settings=Object.assign({},DEFAULTS,load('cq.settings.v1',{}));
@@ -690,7 +752,7 @@ function paintWeak(boxId,hintId){
     : (played?'Ninguna tonalidad pendiente. Baja el tiempo máximo para subir el listón.'
              :'Todavía no hay datos. Juega una ronda y la app recordará las que más te cuestan.');
 }
-function refreshAll(){ syncSettings(); paintLabels(); paintMap(); paintWeak('weakChips','weakHint'); paintProgress(); paintStudy(); }
+function refreshAll(){ syncSettings(); paintScales(); paintLabels(); paintMap(); paintWeak('weakChips','weakHint'); paintProgress(); paintStudy(); }
 
 /* ---------- Piano ---------- */
 var actx=null, master=null, samples={}, loading=false;
@@ -791,7 +853,7 @@ function wedgeTap(id){
   var v=document.body.getAttribute('data-view');
   if(v==='play'){
     if(G&&!G.locked&&G.q.kind==='inv') resolve(id);
-  }else if(v!=='help') study(id);
+  }else if(v!=='help'&&v!=='scales') study(id);
 }
 
 /* ---------- Juego ---------- */
@@ -1079,6 +1141,131 @@ function restore(code){
   loadAll();
 }
 
+/* ---------- Escalas y modos ---------- */
+var LET=['C','D','E','F','G','A','B'], LPC=[0,2,4,5,7,9,11];
+var TONICS=[['C'],['D♭','C♯'],['D'],['E♭','D♯'],['E'],['F'],['F♯','G♭'],['G'],['A♭','G♯'],['A'],['B♭','A♯'],['B']];
+function seven(a){return a.map(function(v,i){return [i,v]})}
+var GROUPS=[['maj','Familia mayor','Tienen la 3ª mayor. Se comparan con la escala mayor.'],
+            ['min','Familia menor','Tienen la 3ª menor. Se comparan con la menor natural.'],
+            ['oth','Otras escalas útiles','Las que más vas a usar fuera de los siete modos.']];
+var SCALES=[
+ {g:'maj',name:'Jónico (escala mayor)',n:seven([0,0,0,0,0,0,0]),hl:[],par:0,
+  chg:'Es la referencia de la familia mayor. No cambia nada.',
+  mn:'Jónico = la mayor de toda la vida: do re mi fa sol la si.',
+  use:'Luminosa y estable. Pop, clásica, casi todo.'},
+ {g:'maj',name:'Lidio',n:seven([0,0,0,1,0,0,0]),hl:[3],par:7,
+  chg:'Mayor con la 4ª subida medio tono (♯4).',
+  mn:'Lidio Levanta la 4ª. En el círculo: las notas de la tonalidad vecina en sentido horario.',
+  use:'Soñadora y flotante. Bandas sonoras, ambient; la sintonía de Los Simpson.'},
+ {g:'maj',name:'Mixolidio',n:seven([0,0,0,0,0,0,-1]),hl:[6],par:5,
+  chg:'Mayor con la 7ª bajada medio tono (♭7).',
+  mn:'Mixolidio Mustia la 7ª. En el círculo: las notas de la tonalidad vecina en sentido antihorario.',
+  use:'Mayor con calle. Rock, blues, funk; es la escala del acorde de dominante (V7).'},
+ {g:'min',name:'Eólico (menor natural)',n:seven([0,0,-1,0,0,-1,-1]),hl:[],par:3,
+  chg:'Es la referencia de la familia menor. Respecto a la mayor baja 3ª, 6ª y 7ª.',
+  mn:'Eólico = la relativa menor: el anillo interior del círculo.',
+  use:'Melancólica. Pop, rock, house; casi toda la música en menor.'},
+ {g:'min',name:'Dórico',n:seven([0,0,-1,0,0,0,-1]),hl:[5],par:10,
+  chg:'Menor con la 6ª subida medio tono (6ª mayor).',
+  mn:'Dórico Da un 6 mayor.',
+  use:'Menor con luz. Funk, jazz modal, deep house; «So What» de Miles Davis.'},
+ {g:'min',name:'Frigio',n:seven([0,-1,-1,0,0,-1,-1]),hl:[1],par:8,
+  chg:'Menor con la 2ª bajada medio tono (♭2).',
+  mn:'Frigio: Frío en el 2.',
+  use:'Oscura y tensa. Flamenco, metal, techno.'},
+ {g:'min',name:'Locrio',n:seven([0,-1,-1,0,-1,-1,-1]),hl:[1,4],par:1,
+  chg:'Menor con la 2ª y la 5ª bajadas (♭2 y ♭5). Es el único que necesita dos cambios; visto desde el frigio, solo baja la 5ª.',
+  mn:'Locrio, el Loco: le falla hasta la quinta.',
+  use:'Inestable; casi no se usa como tonalidad. Va sobre el acorde semidisminuido (m7♭5).'},
+ {g:'oth',name:'Menor armónica',n:seven([0,0,-1,0,0,-1,0]),hl:[6],
+  chg:'Menor natural con la 7ª subida medio tono (7ª mayor, la sensible).',
+  mn:'Armónica: Arriba la 7ª, para que el acorde V sea mayor.',
+  use:'Dramática, sabor clásico y oriental. Da el V7 en tonalidades menores.'},
+ {g:'oth',name:'Menor melódica',n:seven([0,0,-1,0,0,0,0]),hl:[2],
+  chg:'Mayor con la 3ª bajada (♭3). Visto desde la menor natural: sube la 6ª y la 7ª.',
+  mn:'Melódica: Mayor en todo Menos en la 3ª.',
+  use:'Jazz y fusión. Suaviza el salto que tiene la armónica entre la 6ª y la 7ª.'},
+ {g:'oth',name:'Pentatónica mayor',n:[[0,0],[1,0],[2,0],[4,0],[5,0]],hl:[],
+  chg:'Mayor sin la 4ª ni la 7ª.',
+  mn:'Quita los dos semitonos de la mayor: fuera 4 y 7. Son cinco tonalidades seguidas en el círculo de quintas.',
+  use:'Folk, country, pop; melodías que nunca chocan.'},
+ {g:'oth',name:'Pentatónica menor',n:[[0,0],[2,-1],[3,0],[4,0],[6,-1]],hl:[],
+  chg:'Menor natural sin la 2ª ni la 6ª.',
+  mn:'Son las mismas cinco notas que la pentatónica mayor relativa. Con tónica Mi♭ (E♭) son justo las cinco teclas negras.',
+  use:'Rock, blues, hip hop; la escala de los solos de guitarra.'},
+ {g:'oth',name:'Blues',n:[[0,0],[2,-1],[3,0],[4,-1],[4,0],[6,-1]],hl:[3],
+  chg:'Pentatónica menor más la ♭5 (la blue note).',
+  mn:'Penta menor + una nota de paso entre la 4ª y la 5ª.',
+  use:'Blues, rock, jazz, funk.'},
+ {g:'oth',name:'Frigia dominante (flamenca)',n:seven([0,-1,0,0,0,-1,-1]),hl:[2],
+  chg:'Frigio con la 3ª subida (3ª mayor).',
+  mn:'Frigio con acorde mayor: donde descansa la cadencia andaluza (Am – G – F – E).',
+  use:'Flamenco, música árabe y sefardí. Es el 5º modo de la menor armónica.'}
+];
+function accStr(n){return n===0?'':n>0?'♯♯♯'.slice(0,n):'♭♭♭'.slice(0,-n)}
+function spell(tonic,sc){
+  var li=LET.indexOf(tonic.charAt(0)), tacc=tonic.length>1?(tonic.charAt(1)==='♯'?1:-1):0;
+  var tpc=(LPC[li]+tacc+12)%12, out=[], cost=0;
+  sc.n.forEach(function(x){
+    var l=(li+x[0])%7, target=(tpc+LPC[x[0]]+x[1]+120)%12, a=target-LPC[l];
+    while(a>6)a-=12; while(a<-6)a+=12;
+    cost+=Math.abs(a)+(Math.abs(a)>1?4:0);
+    out.push(LET[l]+accStr(a));
+  });
+  return {notes:out,cost:cost};
+}
+function bestSpell(pc,sc){
+  var best=null;
+  TONICS[pc].forEach(function(t){var r=spell(t,sc); if(!best||r.cost<best.cost) best=r;});
+  return best.notes;
+}
+function playScale(pc,sc){
+  initAudio(); if(!settings.sound||!actx) return;
+  try{
+    var base=48+pc, when=actx.currentTime+0.03;
+    var ms=sc.n.map(function(x){return base+LPC[x[0]]+x[1]}); ms.push(base+12);
+    ms.forEach(function(m,i){ note(m,when+i*0.27,0.75); });
+  }catch(e){}
+}
+function tag(name,cls,text){var e=document.createElement(name); if(cls)e.className=cls; if(text!==undefined)e.textContent=text; return e}
+function paintScales(){
+  var pc=settings.tonic||0, tbox=$('tonics'), list=$('scList');
+  tbox.innerHTML='';
+  TONICS.forEach(function(t,i){
+    var b=tag('button','',tr(t[0])); b.type='button'; b.setAttribute('aria-pressed',String(i===pc));
+    b.addEventListener('click',function(){settings.tonic=i; save('cq.settings.v1',settings); paintScales();});
+    tbox.appendChild(b);
+  });
+  list.innerHTML='';
+  GROUPS.forEach(function(g){
+    var head=tag('div','sc-group'); head.appendChild(tag('h2','',g[1])); head.appendChild(tag('p','hint',g[2]));
+    list.appendChild(head);
+    SCALES.filter(function(s){return s.g===g[0]}).forEach(function(sc){
+      var notes=bestSpell(pc,sc), card=tag('div','card sc');
+      var top=tag('div','sc-top');
+      top.appendChild(tag('h3','',tr(notes[0])+' '+sc.name.charAt(0).toLowerCase()+sc.name.slice(1)));
+      var hb=tag('button','ghost hearsc','Escuchar'); hb.type='button';
+      hb.addEventListener('click',function(){playScale(pc,sc)});
+      top.appendChild(hb); card.appendChild(top);
+      card.appendChild(tag('p','sc-chg',sc.chg));
+      var f=tag('div','sc-row'), n=tag('div','sc-row');
+      sc.n.forEach(function(x,i){
+        var hl=sc.hl.indexOf(i)>-1;
+        f.appendChild(tag('span','dg'+(hl?' hl':''),(x[1]<0?'♭':x[1]>0?'♯':'')+(x[0]+1)));
+        n.appendChild(tag('span','nt'+(hl?' hl':''),tr(notes[i])));
+      });
+      card.appendChild(f); card.appendChild(n);
+      var dl=tag('dl','');
+      function row(k,v){dl.appendChild(tag('dt','',k)); dl.appendChild(tag('dd','',v));}
+      row('Truco',sc.mn);
+      if(sc.par) row('Mismas notas que',flat(tr(MAJ[((pc+sc.par)%12*7)%12]))+' mayor');
+      row('Carácter y uso',sc.use);
+      card.appendChild(dl);
+      list.appendChild(card);
+    });
+  });
+}
+
 /* ---------- Eventos ---------- */
 function wire(){
   document.querySelectorAll('.seg[data-key]').forEach(function(seg){
@@ -1108,6 +1295,8 @@ function wire(){
   $('btnSetup').addEventListener('click',quit);
   $('btnHear').addEventListener('click',function(){ if(G&&G.q&&G.q.kind==='ear') playEar(G.q); });
   $('btnHelp').addEventListener('click',function(){ lastView=document.body.getAttribute('data-view'); setView('help'); window.scrollTo(0,0); });
+  $('btnScales').addEventListener('click',function(){ setView('scales'); window.scrollTo(0,0); });
+  $('btnScalesBack').addEventListener('click',function(){ setView('setup'); window.scrollTo(0,0); });
   $('btnHelpBack').addEventListener('click',function(){ setView(lastView==='results'?'results':'setup'); window.scrollTo(0,0); });
   var armed=0, rb=$('btnReset');
   rb.addEventListener('click',function(){
