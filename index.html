@@ -251,8 +251,8 @@ body[data-view="play"] .legend{display:none}
         <circle class="hub" r="62"></circle>
         <circle class="track" r="52"></circle>
         <circle class="prog" id="prog" r="52" stroke-dasharray="326.73" stroke-dashoffset="0"></circle>
-        <text id="hubBig" y="-4">5ª</text>
-        <text id="hubSmall" y="24">sentido horario</text>
+        <text id="hubBig" y="-5">5ª</text>
+        <text id="hubSmall" y="22">horario</text>
       </svg>
     </div>
     <div class="legend" id="legend"><i></i> Tonalidades que la app te va a repetir más</div>
@@ -374,7 +374,7 @@ body[data-view="play"] .legend{display:none}
       </div>
       <button class="cta" id="btnAgain">Otra ronda</button>
     </section>
-    <p class="ver">Versión 1.3</p>
+    <p class="ver">Versión 1.3.1</p>
   </div>
 </main>
 
@@ -647,7 +647,7 @@ function clearWedges(){
   qmark.style.display='none';
 }
 function hubIdle(){
-  $('hubBig').textContent='5ª'; $('hubSmall').textContent='sentido horario';
+  $('hubBig').textContent='5ª'; $('hubSmall').textContent='horario';
   prog.setAttribute('stroke-dashoffset',0); prog.classList.remove('low');
 }
 function pool(){

@@ -1,5 +1,5 @@
 // Guarda la app para que funcione sin conexión. Con conexión siempre carga la versión más reciente.
-var CACHE='quintas-v1.3';
+var CACHE='quintas-v1.3.1';
 var FILES=['./','index.html','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png'];
 self.addEventListener('install',function(e){e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(FILES)}));self.skipWaiting();});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==CACHE}).map(function(k){return caches.delete(k)}))}));self.clients.claim();});

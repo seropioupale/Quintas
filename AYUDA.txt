@@ -1,0 +1,235 @@
+ENTRENADOR DEL CÍRCULO DE QUINTAS
+Ayuda e historial de cambios
+Versión actual: 1.3.1 (11 de noviembre de 2026)
+Dirección: https://seropioupale.github.io/Quintas/
+
+
+==================================================
+1. QUÉ ES
+==================================================
+
+Un juego para aprender y automatizar el círculo de quintas. La app te
+pregunta por tonalidades sin decirte cuál es, mide lo rápido que
+respondes y te repite más las que peor llevas.
+
+El círculo tiene 12 sectores de colores:
+  - Anillo exterior: tonalidades mayores.
+  - Anillo interior: sus relativas menores.
+  - Arriba está C (Do). En sentido horario subes por quintas y sumas
+    un sostenido; en sentido antihorario bajas por quintas y sumas
+    un bemol.
+
+
+==================================================
+2. CÓMO SE JUEGA
+==================================================
+
+1. Revisa los ajustes y pulsa "Empezar ronda".
+2. Lee la pregunta bajo el círculo y responde antes de que se agote
+   el tiempo (el contador está en el centro del círculo).
+3. Tras cada respuesta verás la tonalidad correcta, su armadura y
+   oirás su acorde.
+4. Al terminar verás puntos, aciertos, tiempo medio, mejor racha,
+   los fallos de la ronda y las tonalidades que se repetirán más.
+
+La botonera está en orden cromático (C, D♭, D, E♭...), no en el orden
+del círculo, para que no puedas acertar solo por la posición.
+
+
+==================================================
+3. TIPOS DE PREGUNTA
+==================================================
+
+Puedes activar uno o varios en "Tipos de pregunta". Se mezclan al azar.
+
+  Posición
+    Se ilumina un sector con un "?". Di qué tonalidad es.
+
+  Armadura
+    Se muestra una armadura (por ejemplo "3♯"). Di qué tonalidad la
+    lleva. El círculo queda apagado hasta que respondes.
+
+  Relativa
+    Se ilumina una tonalidad con su nombre. Di cuál es su relativa
+    (la menor de una mayor, o la mayor de una menor).
+
+  Vecinas
+    Se ilumina una tonalidad con su nombre. Di cuál está una quinta
+    arriba (dominante, siguiente sector en sentido horario) o una
+    quinta abajo (subdominante, sector anterior).
+
+  Tocar en el círculo
+    Pregunta inversa: la app nombra una tonalidad y tú tocas su
+    sector en el círculo. Aquí no hay botonera.
+
+
+==================================================
+4. AJUSTES
+==================================================
+
+  Notación
+    Americana (C D E F G A B), por defecto, o europea
+    (Do Re Mi Fa Sol La Si).
+
+  Tonalidades
+    Mayores, Menores o Mixto. Decide qué tonalidades pueden ser la
+    respuesta correcta.
+
+  Tipos de pregunta
+    Ver apartado 3. Siempre queda al menos uno activo.
+
+  Preguntas
+    De 5 a 60 por ronda, de 5 en 5. Por defecto 15.
+
+  Tiempo máximo
+    De 2 a 20 segundos por pregunta. Por defecto 8.
+
+  Acelerar al acertar
+    Cada acierto recorta el límite un 6 %. Cada fallo lo relaja un
+    12 %, sin pasar nunca del tiempo máximo. El límite no baja del
+    35 % del tiempo máximo ni de 1,5 segundos.
+
+  Reintento inmediato
+    La tonalidad que fallas vuelve a salir dos o tres preguntas
+    después, con el aviso "Repaso de un fallo reciente". Si fallas
+    al final de la ronda, esta se alarga hasta 3 preguntas extra.
+
+  Sonido
+    Suena el acorde de la tonalidad correcta al responder.
+
+Los ajustes se guardan solos.
+
+
+==================================================
+5. PUNTUACIÓN
+==================================================
+
+Por cada acierto:
+  100 puntos
+  + hasta 100 por rapidez (más cuanto antes respondas)
+  + 10 por cada acierto seguido en la racha (máximo +100)
+
+Fallar o quedarte sin tiempo no resta puntos, pero pone la racha a
+cero. El récord es la mejor puntuación de una ronda.
+
+
+==================================================
+6. MEMORIA DE REPASO
+==================================================
+
+La app guarda una nota de dificultad por cada tonalidad:
+  - Fallo o tiempo agotado: la dificultad sube.
+  - Acierto rápido (en menos de la mitad del límite): baja bastante.
+  - Acierto lento: baja un poco.
+
+Cuanto más alta es la dificultad, más veces sale esa tonalidad al
+azar. Las pendientes aparecen:
+  - Marcadas con un punto blanco en el círculo.
+  - Listadas en "Tu memoria de repaso", con su número de fallos.
+
+"Borrar memoria" pone a cero las dificultades (pide confirmación con
+un segundo toque). No borra el récord ni el progreso por días.
+
+
+==================================================
+7. MODO ESTUDIO
+==================================================
+
+Fuera de una ronda, toca cualquier sector del círculo. Oirás su
+acorde y verás:
+  - Su armadura.
+  - Su relativa.
+  - La tonalidad una quinta arriba (dominante).
+  - La tonalidad una quinta abajo (subdominante).
+
+El sector elegido y sus tres relacionadas quedan resaltados. Toca el
+mismo sector otra vez para quitar la selección.
+
+
+==================================================
+8. PROGRESO POR DÍAS
+==================================================
+
+En "Tu progreso" verás:
+  - Racha de días seguidos practicando.
+  - Preguntas respondidas hoy y porcentaje de aciertos de hoy.
+  - Tiempo medio por acierto de los últimos 7 días, en segundos.
+    Barras más bajas significan respuestas más rápidas.
+
+
+==================================================
+9. PANTALLA COMPLETA
+==================================================
+
+La mejor forma de usarla es instalarla en la pantalla de inicio:
+
+  1. Abre https://seropioupale.github.io/Quintas/ en Safari
+     (la Q va en mayúscula).
+  2. Pulsa compartir y elige "Añadir a pantalla de inicio".
+  3. Ábrela desde el icono "Quintas".
+
+Así se abre a pantalla completa, sin barras del navegador, con su
+icono propio, y funciona sin conexión después de la primera vez.
+
+Si la abres en un navegador sin instalarla, hay un botón "Pantalla
+completa" arriba a la derecha. Solo aparece si el navegador lo
+permite (Android, iPad y ordenador; en iPhone no).
+
+Durante la ronda, en el móvil, la cabecera se oculta y el círculo se
+ajusta para que todo quepa en una pantalla.
+
+Las actualizaciones llegan solas: con conexión, la app carga siempre
+la última versión publicada.
+
+
+==================================================
+10. DÓNDE SE GUARDAN TUS DATOS
+==================================================
+
+Ajustes, memoria de repaso, récord y progreso se guardan en el
+dispositivo donde juegas. No se comparten entre el móvil y el
+ordenador, ni entre la app instalada y la copia que hay en Claude.
+Se pierden si borras los datos del navegador o desinstalas la app.
+
+El código está en el repositorio de GitHub seropioupale/Quintas.
+
+
+==================================================
+11. HISTORIAL DE CAMBIOS
+==================================================
+
+Versión 1.3.1 · 11/11/2026
+  - Corregido el texto del centro del círculo, que se salía del aro
+    cuando la app estaba en reposo.
+
+Versión 1.3 · 11/11/2026
+  - Publicada como web independiente en GitHub Pages.
+  - Icono propio al añadirla a la pantalla de inicio.
+  - Se abre a pantalla completa desde el icono, también en iPhone.
+  - Funciona sin conexión.
+  - Márgenes adaptados a la muesca y a la barra inferior del iPhone.
+
+Versión 1.2 · 11/11/2026
+  - Nuevos tipos de pregunta: Armadura, Relativa y Vecinas.
+  - Pregunta inversa: tocar en el círculo la tonalidad nombrada.
+  - Selector de tipos de pregunta en los ajustes.
+  - Reintento inmediato de las tonalidades falladas (desactivable).
+  - Modo estudio: tocar un sector fuera de la ronda.
+  - Progreso por días: racha diaria y tiempo medio de 7 días.
+  - Número de versión al pie de la app.
+
+Versión 1.1 · 11/11/2026
+  - Botón "Pantalla completa".
+  - La ronda cabe en una sola pantalla en el móvil.
+
+Versión 1.0 · 11/11/2026
+  - Círculo de quintas de 12 colores con mayores y relativas menores.
+  - Pregunta por posición con sector iluminado.
+  - Botonera de 12 tonalidades en orden cromático.
+  - Notación americana (por defecto) y europea.
+  - Modos Mayores, Menores y Mixto.
+  - Temporizador con tiempo máximo y número de preguntas ajustables.
+  - Aceleración progresiva del límite al acertar.
+  - Memoria de repaso de las tonalidades difíciles.
+  - Armadura y acorde de la tonalidad tras cada respuesta.
+  - Puntuación, racha y récord.
