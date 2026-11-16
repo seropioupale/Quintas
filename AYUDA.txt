@@ -1,6 +1,6 @@
 ENTRENADOR DEL CÍRCULO DE QUINTAS
 Ayuda e historial de cambios
-Versión actual: 1.5 (11 de noviembre de 2026)
+Versión actual: 1.6 (16 de noviembre de 2026)
 Dirección: https://seropioupale.github.io/Quintas/
 
 
@@ -84,8 +84,32 @@ Puedes activar uno o varios en "Tipos de pregunta". Se mezclan al azar.
     El tiempo empieza a contar cuando termina el audio. Solo sale si
     el sonido está activado.
 
+  Armadura inversa
+    "¿Qué armadura tiene A mayor?". Eliges el número de alteraciones
+    entre cuatro opciones.
+
+  Paralela
+    "¿Cuál es la menor paralela de D mayor?". Misma tónica, modo
+    contrario (Dm). Se ilumina la tonalidad de partida.
+
+  Notas que cambian
+    "¿Cuántas notas cambian de C a E♭?". Cada paso en el círculo
+    cambia una sola nota, así que la respuesta es la distancia en el
+    círculo (de 1 a 6).
+
+  Última alteración
+    "¿Cuál es la última alteración de la armadura de E mayor?".
+    Eliges entre cuatro sostenidos o bemoles.
+
 Grados y Progresiones no preguntan por F♯/G♭ mayor ni D♯m/E♭m,
 porque sus acordes se escriben de dos maneras.
+
+PREGUNTAS QUE SE DESBLOQUEAN
+Empiezas con tres tipos (Posición, Armadura y Relativa). Cada 15
+aciertos se desbloquea uno nuevo, en este orden: Vecinas, Tocar en el
+círculo, Grados, Progresiones, Oído, Armadura inversa, Paralela, Notas
+que cambian y Última alteración. Se activa solo y se anuncia al acabar
+la ronda. En los ajustes, "Desbloquear todos ahora" los abre todos.
 
 
 ==================================================
@@ -308,6 +332,12 @@ conexión. Mientras cargan, suena un tono sintético sencillo.
 ==================================================
 12. HISTORIAL DE CAMBIOS
 ==================================================
+
+Versión 1.6 · 16/11/2026
+  - Pregunta y explicación con letra más grande y más contraste.
+  - Cuatro tipos de pregunta nuevos: Armadura inversa, Paralela,
+    Notas que cambian y Última alteración.
+  - Desbloqueo progresivo de tipos de pregunta.
 
 Versión 1.5 · 11/11/2026
   - Nueva zona de consulta "Escalas y modos": los siete modos y seis

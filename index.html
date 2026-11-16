@@ -270,6 +270,17 @@ body[data-view="play"] .legend{display:none}
 @media (prefers-reduced-motion:reduce){
   *{animation:none !important;transition:none !important}
 }
+.multi button.locked{opacity:.42;cursor:default}
+header.top{flex-wrap:wrap}
+.top-r{flex-wrap:wrap;justify-content:flex-end}
+/* Pregunta bien legible a contrarreloj */
+body[data-view="play"] .feedback{min-height:64px}
+body[data-view="play"] .feedback .main{font-size:23px;line-height:1.15;color:#fff;text-wrap:balance}
+body[data-view="play"] .feedback.good .main{color:var(--ok)}
+body[data-view="play"] .feedback.miss .main{color:var(--bad)}
+.feedback .sub{font-size:16px;color:#e4def2;font-weight:500;line-height:1.35;margin-top:3px}
+.keys.six{grid-template-columns:repeat(3,1fr)}
+.keys.six button{font-size:20px;min-height:58px}
 </style>
 </head>
 <body data-view="setup">
@@ -350,16 +361,9 @@ body[data-view="play"] .legend{display:none}
         </div>
         <div class="field col">
           <span class="lab">Tipos de pregunta</span>
-          <div class="multi" id="kinds">
-            <button type="button" data-val="pos">Posición</button>
-            <button type="button" data-val="sig">Armadura</button>
-            <button type="button" data-val="rel">Relativa</button>
-            <button type="button" data-val="nb">Vecinas</button>
-            <button type="button" data-val="inv">Tocar en el círculo</button>
-            <button type="button" data-val="deg">Grados</button>
-            <button type="button" data-val="prog">Progresiones</button>
-            <button type="button" data-val="ear">Oído</button>
-          </div>
+          <div class="multi" id="kinds"></div>
+          <p class="hint" id="kindsHint"></p>
+          <button class="ghost" id="btnUnlockAll" type="button">Desbloquear todos ahora</button>
         </div>
         <div class="field">
           <span class="lab">Preguntas</span>
@@ -473,7 +477,18 @@ body[data-view="play"] .legend{display:none}
           <li><b>Progresiones.</b> Elige los acordes de un ii–V–I, I–IV–V y otras en la tonalidad indicada.</li>
           <li><b>Oído.</b> Suenan dos tonalidades seguidas. Di si la segunda está una quinta arriba, una quinta abajo o es la relativa.</li>
         </ul>
+        <p>Y estos se desbloquean a medida que aciertas:</p>
+        <ul>
+          <li><b>Armadura inversa.</b> «¿Qué armadura tiene A mayor?»: eliges el número de alteraciones.</li>
+          <li><b>Paralela.</b> «¿Cuál es la menor paralela de D mayor?»: misma tónica, modo contrario (Dm).</li>
+          <li><b>Notas que cambian.</b> «¿Cuántas notas cambian de C a E♭?». Cada paso en el círculo cambia una nota.</li>
+          <li><b>Última alteración.</b> «¿Cuál es la última alteración de la armadura de E mayor?». Te prepara para leer armaduras al vuelo.</li>
+        </ul>
         <small>Grados y progresiones no preguntan por F♯/G♭ ni D♯m/E♭m, porque sus acordes se escriben de dos maneras.</small>
+      </div>
+      <div class="card">
+        <h2>Preguntas que se desbloquean</h2>
+        <p>Empiezas con tres tipos de pregunta. Cada 15 aciertos se desbloquea uno nuevo, se activa solo y te lo anuncia al acabar la ronda. Si quieres verlos todos ya, en los ajustes tienes «Desbloquear todos ahora».</p>
       </div>
       <div class="card">
         <h2>Tiempo y puntos</h2>
@@ -510,6 +525,11 @@ body[data-view="play"] .legend{display:none}
     <!-- RESULTADOS -->
     <section class="view" id="results">
       <p class="verdict" id="verdict"></p>
+      <div class="card" id="rNewCard" style="display:none">
+        <h2>Nuevos tipos de pregunta desbloqueados</h2>
+        <div class="chips" id="rNew"></div>
+        <p class="hint">Ya están activados en tus ajustes. En «Ayuda» se explica cómo funcionan.</p>
+      </div>
       <div class="stats">
         <div><span>Puntos</span><b id="rPts">0</b></div>
         <div><span>Aciertos</span><b id="rOk">0/0</b></div>
@@ -531,7 +551,7 @@ body[data-view="play"] .legend{display:none}
       </div>
       <button class="cta" id="btnAgain">Otra ronda</button>
     </section>
-    <p class="ver">Versión 1.5</p>
+    <p class="ver">Versión 1.6</p>
   </div>
 </main>
 
@@ -549,7 +569,11 @@ var SCALE={M:[0,2,4,5,7,9,11],m:[0,2,3,5,7,8,10]};
 var QUAL={M:['','m','m','','','m','°'],m:['m','°','','m','m','','']};
 var NUM={M:['I','ii','iii','IV','V','vi','vii°'],m:['i','ii°','III','iv','v','VI','VII']};
 var PROGS={M:[[1,4,0],[0,3,4],[0,4,5,3],[5,3,0,4]],m:[[0,3,4],[0,5,2,6],[1,4,0]]};
-var KINDS=['pos','sig','rel','nb','inv','deg','prog','ear'];
+var KINDS=['pos','sig','rel','nb','inv','deg','prog','ear','sigl','par','dist','acc'];
+var ORDER=KINDS, OLD=['pos','sig','rel','nb','inv','deg','prog','ear'], PFX='cq';
+var KDEF={pos:'Posición',sig:'Armadura',rel:'Relativa',nb:'Vecinas',inv:'Tocar en el círculo',deg:'Grados',prog:'Progresiones',ear:'Oído',
+  sigl:'Armadura inversa',par:'Paralela',dist:'Notas que cambian',acc:'Última alteración'};
+function mk(t,c,x){return tag(t,c,x)}
 var EAR={up:'Quinta arriba',down:'Quinta abajo',rel:'Relativa'};
 var SVGNS='http://www.w3.org/2000/svg';
 var TAU=326.73;
@@ -571,6 +595,68 @@ function loadAll(){
   stats=load('cq.stats.v1',{}); days=load('cq.days.v1',{}); best=load('cq.best.v1',0);
 }
 loadAll();
+/* ---------- Desbloqueo progresivo ---------- */
+var UNL_START=3, UNL_EVERY=15, unl, unlNext, newUnl=[];
+function totalOk(){ var t=0; for(var k in days) t+=(days[k]&&days[k].ok)||0; return t; }
+function saveUnl(){ save(PFX+'.unl.v1',unl); save(PFX+'.unlnext.v1',unlNext); }
+function loadUnl(){
+  unl=load(PFX+'.unl.v1',null); unlNext=load(PFX+'.unlnext.v1',null);
+  if(!Array.isArray(unl)){
+    var played=Object.keys(stats).some(function(k){return stats[k]&&stats[k].n>0});
+    unl=played?OLD.slice():ORDER.slice(0,UNL_START);
+  }
+  unl=unl.filter(function(k){return ORDER.indexOf(k)>-1});
+  ORDER.slice(0,UNL_START).forEach(function(k){ if(unl.indexOf(k)<0) unl.push(k); });
+  if(typeof unlNext!=='number') unlNext=totalOk()+UNL_EVERY;
+  saveUnl();
+}
+function lockedList(){ return ORDER.filter(function(k){return unl.indexOf(k)<0}); }
+function checkUnlock(){
+  var t=totalOk(), lk=lockedList();
+  while(lk.length&&t>=unlNext){
+    var k=lk.shift(); unl.push(k); newUnl.push(k);
+    if(settings.kinds.indexOf(k)<0) settings.kinds.push(k);
+    unlNext+=UNL_EVERY;
+  }
+  if(!lk.length&&unlNext<t) unlNext=t;
+  saveUnl(); save(PFX+'.settings.v1',settings);
+}
+function unlockAll(){
+  unl=ORDER.slice();
+  ORDER.forEach(function(k){ if(settings.kinds.indexOf(k)<0) settings.kinds.push(k); });
+  saveUnl();
+}
+function paintKinds(){
+  var box=$('kinds'); if(!box) return; box.innerHTML='';
+  ORDER.forEach(function(k){
+    var lock=unl.indexOf(k)<0, b=mk('button','',(lock?'🔒 ':'')+KDEF[k]);
+    b.type='button'; b.setAttribute('data-val',k);
+    if(lock){ b.disabled=true; b.classList.add('locked'); }
+    else b.setAttribute('aria-pressed',String(settings.kinds.indexOf(k)>-1));
+    box.appendChild(b);
+  });
+  var lk=lockedList(), left=Math.max(1,unlNext-totalOk());
+  $('kindsHint').textContent=lk.length
+    ?'Cada '+UNL_EVERY+' aciertos se desbloquea un ejercicio nuevo. El próximo, «'+KDEF[lk[0]]+'», llega en '+left+(left===1?' acierto.':' aciertos.')
+    :'Tienes todos los ejercicios desbloqueados.';
+  $('btnUnlockAll').style.display=lk.length?'':'none';
+}
+function paintNew(){
+  var card=$('rNewCard'), box=$('rNew');
+  if(!newUnl.length){ card.style.display='none'; return; }
+  card.style.display=''; box.innerHTML='';
+  newUnl.forEach(function(k){ box.appendChild(mk('span','chip',KDEF[k])); });
+  newUnl=[];
+}
+function wireUnlock(){
+  var armed=0, b=$('btnUnlockAll');
+  b.addEventListener('click',function(){
+    if(armed){ clearTimeout(armed); armed=0; b.textContent='Desbloquear todos ahora'; unlockAll(); syncSettings(); return; }
+    b.textContent='Toca otra vez para confirmar';
+    armed=setTimeout(function(){armed=0; b.textContent='Desbloquear todos ahora'},3000);
+  });
+}
+loadUnl();
 
 function tr(s){return settings.notation==='eu'?s.replace(/[A-G]/g,function(l){return SOLF[l]}):s}
 function label(type,pos){return tr(type==='M'?MAJ[pos]:MIN[pos])}
@@ -710,9 +796,7 @@ function syncSettings(){
       b.setAttribute('aria-pressed',String(b.getAttribute('data-val')===settings[key]));
     });
   });
-  document.querySelectorAll('#kinds button').forEach(function(b){
-    b.setAttribute('aria-pressed',String(settings.kinds.indexOf(b.getAttribute('data-val'))>-1));
-  });
+  paintKinds();
   $('qOut').textContent=settings.count;
   $('timeRange').value=settings.time;
   $('timeOut').textContent=fmt(settings.time)+' s';
@@ -878,19 +962,19 @@ function pool(){
   types.forEach(function(t){for(var p=0;p<12;p++)out.push(t+p)});
   return out;
 }
-function pickId(skip6){
-  var items=pool().filter(function(id){return id!==G.lastId&&!(skip6&&wedges[id].pos===6)});
+function pickId(skip6,skip0){
+  var items=pool().filter(function(id){return id!==G.lastId&&!(skip6&&wedges[id].pos===6)&&!(skip0&&wedges[id].pos===0)});
   var total=0, ws=items.map(function(id){var w=1+1.7*st(id).score; total+=w; return w});
   var r=Math.random()*total;
   for(var i=0;i<items.length;i++){ r-=ws[i]; if(r<=0) return items[i]; }
   return items[items.length-1];
 }
 function newQuestion(){
-  var kinds=settings.kinds.filter(function(k){return k!=='ear'||settings.sound});
+  var kinds=settings.kinds.filter(function(k){return unl.indexOf(k)>-1&&(k!=='ear'||settings.sound)});
   if(!kinds.length) kinds=['pos'];
   var kind=kinds[rnd(kinds.length)];
-  var chordal=kind==='deg'||kind==='prog';
-  var id=pickId(chordal), w=wedges[id];
+  var chordal=kind==='deg'||kind==='prog'||kind==='acc';
+  var id=pickId(chordal,kind==='acc'), w=wedges[id];
   var q={kind:kind,id:id,type:w.type,pos:w.pos,answer:id};
   if(kind==='nb'){ q.dir=Math.random()<0.5?1:-1; }
   else if(kind==='deg'){
@@ -908,8 +992,28 @@ function newQuestion(){
     q.fromType=q.move==='rel'?other(q.type):q.type;
     q.fromPos=q.move==='up'?(q.pos+11)%12:q.move==='down'?(q.pos+1)%12:q.pos;
     q.answer=q.move;
+  }else if(kind==='sigl'){
+    var near=[1,2,3,11,10,9].map(function(o){return (q.pos+o)%12});
+    q.opts=shuffleA([q.pos].concat(shuffleA(near).slice(0,3)));
+    q.answer='sg'+q.pos;
+  }else if(kind==='par'){
+    q.fromType=other(q.type); q.fromPos=q.type==='m'?(q.pos+3)%12:(q.pos+9)%12;
+  }else if(kind==='dist'){
+    q.d=1+rnd(6); var dir=Math.random()<0.5?1:-1;
+    q.fromType=q.type; q.fromPos=(q.pos+12+dir*q.d)%12;
+    q.answer='d'+q.d;
+  }else if(kind==='acc'){
+    var sharp=q.pos<6, n=sharp?q.pos:12-q.pos, list=sharp?SHARPS:FLATS, sym=sharp?'♯':'♭';
+    q.acc=list[n-1]+sym;
+    var others=list.filter(function(x,i){return i!==n-1&&i<6}).map(function(x){return x+sym});
+    q.opts=shuffleA([q.acc].concat(shuffleA(others).slice(0,3)));
+    q.answer='a'+q.acc;
   }
   return q;
+}
+function shuffleA(a){for(var i=a.length-1;i>0;i--){var j=rnd(i+1),t=a[i];a[i]=a[j];a[j]=t}return a}
+function playTwo(q){ initAudio(); keyChord(q.fromType,q.fromPos,0); keyChord(q.type,q.pos,0.9); }
+function noop(){
 }
 function addKey(box,ans,text,aria){
   var b=document.createElement('button'); b.type='button'; b.setAttribute('data-ans',ans);
@@ -936,6 +1040,15 @@ function buildKeys(q){
   }else if(q.kind==='ear'){
     box.classList.add('three');
     ['down','rel','up'].forEach(function(m){ addKey(box,m,EAR[m]); });
+  }else if(q.kind==='sigl'){
+    box.classList.add('wide');
+    q.opts.forEach(function(p){ addKey(box,'sg'+p,sigShort(p)); });
+  }else if(q.kind==='dist'){
+    box.classList.add('six');
+    [1,2,3,4,5,6].forEach(function(d){ addKey(box,'d'+d,String(d)); });
+  }else if(q.kind==='acc'){
+    box.classList.add('wide');
+    q.opts.forEach(function(a){ addKey(box,'a'+a,tr(a)); });
   }else{
     var type=q.type;
     var order=[0,1,2,3,4,5,6,7,8,9,10,11].sort(function(a,b){return pitch(type,a)-pitch(type,b)});
@@ -993,6 +1106,20 @@ function ask(){
     cueWedge(q.id);
     main=progNum(q.type,q.degs)+' en '+fullName(q.type,q.pos);
     sub='Elige los acordes';
+  }else if(q.kind==='sigl'){
+    cueWedge(q.id);
+    main='¿Qué armadura tiene '+fullName(q.type,q.pos)+'?';
+  }else if(q.kind==='par'){
+    cueWedge(q.fromType+q.fromPos);
+    main='¿Paralela '+word(q.type)+' de '+fullName(q.fromType,q.fromPos)+'?';
+    sub='Misma tónica, modo contrario';
+  }else if(q.kind==='dist'){
+    cueWedge(q.fromType+q.fromPos,false); cueWedge(q.id,false);
+    main='¿Cuántas notas cambian de '+fullName(q.fromType,q.fromPos)+' a '+fullName(q.type,q.pos)+'?';
+    sub='Cada paso en el círculo cambia una nota';
+  }else if(q.kind==='acc'){
+    cueWedge(q.id);
+    main='¿Última alteración de la armadura de '+fullName(q.type,q.pos)+'?';
   }else if(q.kind==='ear'){
     main='Escucha: ¿qué movimiento es?';
     sub='Suena la tonalidad de partida y luego la de llegada';
@@ -1052,6 +1179,15 @@ function resolve(ans){
   }else if(q.kind==='ear'){
     right=EAR[q.move];
     sub='De '+fullName(q.fromType,q.fromPos)+' a '+fullName(q.type,q.pos);
+  }else if(q.kind==='sigl'){
+    right=sigShort(q.pos)+' · '+fullName(q.type,q.pos); sub=sigText(q.pos);
+  }else if(q.kind==='par'){
+    right=fullName(q.type,q.pos); sub='Misma tónica que '+fullName(q.fromType,q.fromPos)+'. '+sigText(q.pos);
+  }else if(q.kind==='dist'){
+    right=q.d+(q.d===1?' nota cambia':' notas cambian');
+    sub='De '+fullName(q.fromType,q.fromPos)+' a '+fullName(q.type,q.pos)+' hay '+q.d+(q.d===1?' paso':' pasos')+' en el círculo.';
+  }else if(q.kind==='acc'){
+    right=tr(q.acc)+' · última de '+fullName(q.type,q.pos); sub=sigText(q.pos);
   }else{
     right=fullName(q.type,q.pos); sub=sigText(q.pos);
   }
@@ -1087,6 +1223,7 @@ function resolve(ans){
     if(settings.sound&&actx) wait=Math.max(wait,q.degs.length*700+500);
   }
   else if(q.kind==='ear'){ if(!good) playEar(q); }
+  else if(q.kind==='par'||q.kind==='dist'){ playTwo(q); if(settings.sound&&actx) wait=Math.max(wait,1900); }
   else keyChord(q.type,q.pos);
   hud();
   $('hudQ').textContent=G.i+'/'+G.total;
@@ -1103,7 +1240,7 @@ function finish(){
   var g=G; G=null;
   if(g.pts>best){best=g.pts;save('cq.best.v1',best)}
   today().rounds++; save('cq.days.v1',days);
-  clearWedges(); hubIdle(); setView('results'); refreshAll();
+  checkUnlock(); clearWedges(); hubIdle(); setView('results'); refreshAll(); paintNew();
   var asked=g.i, pct=g.ok/asked;
   $('verdict').textContent=pct===1?'Ronda perfecta. Baja el tiempo y repite.'
     :pct>=0.8?'Muy bien. Quedan un par de esquinas por pulir.'
@@ -1127,7 +1264,7 @@ function quit(){
 
 /* ---------- Copia de seguridad ---------- */
 function backupCode(){
-  var json=JSON.stringify({v:1,stats:stats,days:days,best:best,settings:settings});
+  var json=JSON.stringify({v:1,stats:stats,days:days,best:best,settings:settings,unl:unl,unlNext:unlNext});
   return 'CQ1:'+btoa(unescape(encodeURIComponent(json)));
 }
 function restore(code){
@@ -1138,7 +1275,9 @@ function restore(code){
   save('cq.stats.v1',o.stats); save('cq.days.v1',o.days);
   save('cq.best.v1',+o.best||0);
   if(o.settings&&typeof o.settings==='object') save('cq.settings.v1',o.settings);
-  loadAll();
+  if(Array.isArray(o.unl)) save('cq.unl.v1',o.unl);
+  if(typeof o.unlNext==='number') save('cq.unlnext.v1',o.unlNext);
+  loadAll(); loadUnl();
 }
 
 /* ---------- Escalas y modos ---------- */
@@ -1333,7 +1472,7 @@ function wireFullscreen(){
   document.addEventListener('fullscreenchange',paint);
   document.addEventListener('webkitfullscreenchange',paint);
 }
-function start(){ buildWheel(); wire(); wireFullscreen(); hubIdle(); refreshAll(); }
+function start(){ buildWheel(); wire(); wireUnlock(); wireFullscreen(); hubIdle(); refreshAll(); }
 start();
 if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){} }
 })();
