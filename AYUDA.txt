@@ -1,6 +1,6 @@
 ENTRENADOR DEL CÍRCULO DE QUINTAS
 Ayuda e historial de cambios
-Versión actual: 1.6 (16 de noviembre de 2026)
+Versión actual: 1.7 (17 de noviembre de 2026)
 Dirección: https://seropioupale.github.io/Quintas/
 
 
@@ -332,6 +332,10 @@ conexión. Mientras cargan, suena un tono sintético sencillo.
 ==================================================
 12. HISTORIAL DE CAMBIOS
 ==================================================
+
+Versión 1.7 · 17/11/2026
+  - Diseño para iPad: rueda mucho más grande, textos y botones a
+    escala de iPad, en vertical y en horizontal.
 
 Versión 1.6 · 16/11/2026
   - Pregunta y explicación con letra más grande y más contraste.

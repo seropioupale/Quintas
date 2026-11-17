@@ -281,6 +281,65 @@ body[data-view="play"] .feedback.miss .main{color:var(--bad)}
 .feedback .sub{font-size:16px;color:#e4def2;font-weight:500;line-height:1.35;margin-top:3px}
 .keys.six{grid-template-columns:repeat(3,1fr)}
 .keys.six button{font-size:20px;min-height:58px}
+/* ---------- iPad y tabletas: todo más grande ---------- */
+@media (pointer:coarse) and (min-width:700px) and (min-height:600px){
+  body{font-size:18px}
+  h1{font-size:40px}
+  .best{font-size:15px}
+  .fs{font-size:15px;padding:10px 14px}
+  .hud{gap:12px}
+  .hud div{padding:10px 10px;border-radius:14px}
+  .hud span{font-size:13px}
+  .hud b{font-size:27px}
+  .keys{gap:12px}
+  .keys button{min-height:74px;font-size:23px;border-radius:16px}
+  .cta{font-size:25px;padding:20px 22px;border-radius:20px}
+  .ghost{font-size:16px;padding:12px 16px;border-radius:14px}
+  .card{padding:20px;gap:18px;border-radius:22px}
+  .card h2{font-size:22px}
+  .field > label,.field > .lab{font-size:17.5px}
+  .field small{font-size:14.5px}
+  .seg{padding:4px;border-radius:14px}
+  .seg button{padding:11px 15px;font-size:16px;border-radius:11px}
+  .multi{gap:8px}
+  .multi button{padding:11px 17px;font-size:16px}
+  .stepper button{width:50px;height:46px;font-size:24px}
+  .stepper output{font-size:23px;min-width:66px}
+  .switch{width:60px;height:36px}
+  .switch i::after{width:28px;height:28px}
+  .switch input:checked + i::after{transform:translateX(24px)}
+  .hint{font-size:15.5px}
+  .chip{font-size:15px;padding:7px 13px}
+  .mini b{font-size:27px}
+  .stats b{font-size:32px}
+  .verdict{font-size:30px}
+  #help p,#help li{font-size:17.5px}
+  #help h2{font-size:22px}
+  textarea#bkArea{font-size:15px}
+  .ver{font-size:14px}
+}
+@media (pointer:coarse) and (min-width:700px) and (min-height:600px){
+  .feedback{min-height:84px}
+  body[data-view="play"] .feedback .main{font-size:31px}
+  .feedback .sub{font-size:19px}
+  body[data-view="play"] .keys button{min-height:70px}
+  .pad{min-height:230px;font-size:48px;border-radius:30px}
+  .taphint{min-height:110px;font-size:18px}
+  .legend{font-size:15px}
+}
+/* iPad en vertical: rueda grande en una columna ancha */
+@media (pointer:coarse) and (orientation:portrait) and (min-width:700px){
+  .app{max-width:780px;gap:18px;padding:calc(24px + env(safe-area-inset-top)) 28px calc(36px + env(safe-area-inset-bottom))}
+  .wheel-wrap{max-width:620px}
+  body[data-view="play"] .wheel-wrap{max-width:clamp(320px, calc(100vh - 600px), 620px)}
+  body[data-view="play"] .wheel-wrap{max-width:clamp(320px, calc(100dvh - 600px), 620px)}
+}
+/* iPad en horizontal: rueda a la izquierda, tan grande como quepa; respuestas a la derecha */
+@media (pointer:coarse) and (orientation:landscape) and (min-width:900px) and (min-height:600px){
+  .app{max-width:1360px;column-gap:44px;padding:calc(20px + env(safe-area-inset-top)) calc(32px + env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) calc(32px + env(safe-area-inset-left))}
+  .wheel-wrap{max-width:min(680px, calc(100vh - 170px))}
+  body[data-view="play"] .wheel-wrap{max-width:min(680px, calc(100vh - 190px))}
+}
 </style>
 </head>
 <body data-view="setup">
@@ -551,7 +610,7 @@ body[data-view="play"] .feedback.miss .main{color:var(--bad)}
       </div>
       <button class="cta" id="btnAgain">Otra ronda</button>
     </section>
-    <p class="ver">Versión 1.6</p>
+    <p class="ver">Versión 1.7</p>
   </div>
 </main>
 
